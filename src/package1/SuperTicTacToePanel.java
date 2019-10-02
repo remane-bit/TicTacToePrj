@@ -21,6 +21,8 @@ public class SuperTicTacToePanel extends JPanel {
     public SuperTicTacToePanel() {
         String startsFirst = JOptionPane.showInputDialog(this, "Who starts first? (Insert X or O)");
         game.whoStartsFirst(startsFirst);
+
+
     }
 
 }
