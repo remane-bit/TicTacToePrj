@@ -16,21 +16,11 @@ public class SuperTicTacToePanel extends JPanel {
     private ImageIcon oIcon;
     private ImageIcon emptyIcon;
 
-    JTextField rowsField = new JTextField(2);
-    JTextField colsField = new JTextField(2);
-    JTextField matchField = new JTextField(2);
-    JTextField whosFirstField = new JTextField(1);
-
-
-
     private SuperTicTacToeGame game;
 
-
     public SuperTicTacToePanel() {
-        //String startsFirst = JOptionPane.showInputDialog(this, "Who starts first? (Insert X or O)");
-        //game.whoStartsFirst(startsFirst);
-
-       // int rows = JOptionPane;
+        String startsFirst = JOptionPane.showInputDialog(this, "Who starts first? (Insert X or O)");
+        game.whoStartsFirst(startsFirst);
     }
 
 }
