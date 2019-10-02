@@ -2,13 +2,9 @@ package package1;
 
 import javax.swing.*;
 
-public class SuperTicTacToe {
-
+public class StartUp {
+/*
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Super Tic Tac Toe");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //phil pil = new startParametersPanel();
         JTextField rowsField = new JTextField(2);
         JTextField colsField = new JTextField(2);
         JTextField inaRowField = new JTextField(2);
@@ -29,13 +25,10 @@ public class SuperTicTacToe {
 
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
-
-
-        SuperTicTacToePanel panel = new SuperTicTacToePanel();
-        frame.getContentPane().add(panel);
-
-        frame.setSize(500, 500);
-        frame.setVisible(true);
-    }
+        if (result == JOptionPane.OK_OPTION) {
+            //System.out.println("x value: " + xField.getText());
+            //System.out.println("y value: " + yField.getText());
+        }*/
+//}
 
 }
