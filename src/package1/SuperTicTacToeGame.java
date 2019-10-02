@@ -18,13 +18,13 @@ public class SuperTicTacToeGame {
         status = GameStatus.IN_PROGRESS;
 
         //ask for number of columns and rows here
-        numberOfRowsCols();
+        //numberOfRowsCols();
 
         //ask for number of connections to win
-        numberOfConnections();
+        //numberOfConnections();
 
         //ask who starts first here
-        whoStartsFirst();
+        //hoStartsFirst();
 
         board = new Cell[numberOfRowsCols][numberOfRowsCols];
 
@@ -33,37 +33,37 @@ public class SuperTicTacToeGame {
                 board[row][col] = Cell.EMPTY;
     }
 
-    public void numberOfConnections() {
-        connectionsToWin = input.nextInt();
+    public void numberOfConnections(int numOfConnections) {
+        connectionsToWin = numOfConnections;
         if (connectionsToWin > numberOfRowsCols) {
             System.out.println("Connections to win cannot be greater than the size of the board!");
-            numberOfConnections();
+            numberOfConnections(numOfConnections);
         }
 
         if(numberOfRowsCols > 3 && connectionsToWin < 3) {
             System.out.println("If the size of the board is greater than 3 the number of connections must be greater than 3!");
-            numberOfConnections();
+            numberOfConnections(numOfConnections);
         }
 
         if(numberOfRowsCols == 3 && connectionsToWin != 3) {
             System.out.println("If the size of the board is 3 the number of the connections must be 3!");
-            numberOfConnections();
+            numberOfConnections(numOfConnections);
         }
     }
 
-    public void numberOfRowsCols() {
-        numberOfRowsCols = input.nextInt();
+    public void numberOfRowsCols(int numRowsCols) {
+        numberOfRowsCols = numRowsCols;
     }
 
-    public void whoStartsFirst() {
-        startsFirst = input.next();
+    public void whoStartsFirst(String whoStartsFirst) {
+        startsFirst = whoStartsFirst;
         if (startsFirst.equals("X") || startsFirst.equals("x")) {
             currentTurn = 1;
         } else if (startsFirst.equals("O") || startsFirst.equals("o")) {
             currentTurn = 0;
         } else {
             System.out.println("Please enter either X or O for this value");
-            whoStartsFirst();
+            whoStartsFirst(whoStartsFirst);
         }
     }
 
