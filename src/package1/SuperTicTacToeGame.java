@@ -35,20 +35,6 @@ public class SuperTicTacToeGame {
 
     public void numberOfConnections(int numOfConnections) {
         connectionsToWin = numOfConnections;
-        if (connectionsToWin > numberOfRowsCols) {
-            System.out.println("Connections to win cannot be greater than the size of the board!");
-            numberOfConnections(numOfConnections);
-        }
-
-        if(numberOfRowsCols > 3 && connectionsToWin < 3) {
-            System.out.println("If the size of the board is greater than 3 the number of connections must be greater than 3!");
-            numberOfConnections(numOfConnections);
-        }
-
-        if(numberOfRowsCols == 3 && connectionsToWin != 3) {
-            System.out.println("If the size of the board is 3 the number of the connections must be 3!");
-            numberOfConnections(numOfConnections);
-        }
     }
 
     public void numberOfRowsCols(int numRowsCols) {
@@ -57,14 +43,6 @@ public class SuperTicTacToeGame {
 
     public void whoStartsFirst(String whoStartsFirst) {
         startsFirst = whoStartsFirst;
-        if (startsFirst.equals("X") || startsFirst.equals("x")) {
-            currentTurn = 1;
-        } else if (startsFirst.equals("O") || startsFirst.equals("o")) {
-            currentTurn = 0;
-        } else {
-            System.out.println("Please enter either X or O for this value");
-            whoStartsFirst(whoStartsFirst);
-        }
     }
 
     public void select(int row, int col) {

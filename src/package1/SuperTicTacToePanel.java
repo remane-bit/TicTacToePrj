@@ -21,6 +21,7 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
     private String whosFirst;
     private String numRowsColsString;
     private String numToWinString;
+    private boolean failureFlag;
 
 
     private SuperTicTacToeGame game;
@@ -35,6 +36,8 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
         JPanel myPanel = new JPanel();
 
         do {
+            failureFlag = false;
+
             myPanel.add(new JLabel("Number of Rows and Columns:"));
             myPanel.add(rowscolsField);
 
@@ -58,7 +61,28 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
 
                 System.out.println(numRowsCols + " " + numToWin + " " + whosFirst);
             }
-        } while();
+
+            if (numRowsCols > 3 && numToWin < 3) {
+                failureFlag = true;
+            }
+
+            if (numRowsCols == 3 && numToWin != 3) {
+                failureFlag = true;
+            }
+
+            if (numRowsCols > 15 || numRowsCols < 2) {
+                failureFlag = true;
+            }
+
+            if (!(whosFirst.equals("X") || whosFirst.equals("x") || whosFirst.equals("O") || whosFirst.equals("o"))) {
+                failureFlag = true;
+            }
+
+            if (numToWin > numRowsCols) {
+                failureFlag = true;
+            }
+
+        } while(failureFlag);
 
 
         xIcon = new ImageIcon("x.jpg");
