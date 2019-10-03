@@ -27,34 +27,38 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
 
     public SuperTicTacToePanel() {
 
+
         JTextField rowscolsField = new JTextField(2);
         JTextField inaRowField = new JTextField(2);
         JTextField whosFirstField = new JTextField(1);
 
         JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Number of Rows and Columns:"));
-        myPanel.add(rowscolsField);
 
-        myPanel.add(new JLabel("How Many Need to be in a Row to Win?:"));
-        myPanel.add(inaRowField);
+        do {
+            myPanel.add(new JLabel("Number of Rows and Columns:"));
+            myPanel.add(rowscolsField);
 
-        myPanel.add(new JLabel("Who Goes First (Please enter X of O):"));
-        myPanel.add(whosFirstField);
+            myPanel.add(new JLabel("How Many Need to be in a Row to Win?:"));
+            myPanel.add(inaRowField);
 
-        int result = JOptionPane.showConfirmDialog(null, myPanel,
-                "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+            myPanel.add(new JLabel("Who Goes First (Please enter X of O):"));
+            myPanel.add(whosFirstField);
 
-        if (result == JOptionPane.OK_OPTION) {
-            numRowsColsString = rowscolsField.getText();
-            numRowsCols = Integer.parseInt(numRowsColsString);
+            int result = JOptionPane.showConfirmDialog(null, myPanel,
+                    "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
 
-            numToWinString = inaRowField.getText();
-            numToWin = Integer.parseInt(numToWinString);
+            if (result == JOptionPane.OK_OPTION) {
+                numRowsColsString = rowscolsField.getText();
+                numRowsCols = Integer.parseInt(numRowsColsString);
 
-            whosFirst = whosFirstField.getText();
+                numToWinString = inaRowField.getText();
+                numToWin = Integer.parseInt(numToWinString);
 
-            System.out.println(numRowsCols + " " + numToWin + " " + whosFirst);
-        }
+                whosFirst = whosFirstField.getText();
+
+                System.out.println(numRowsCols + " " + numToWin + " " + whosFirst);
+            }
+        } while();
 
 
         xIcon = new ImageIcon("x.jpg");
