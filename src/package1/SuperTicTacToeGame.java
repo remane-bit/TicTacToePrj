@@ -15,6 +15,8 @@ public class SuperTicTacToeGame {
     public void newGame() {
         status = GameStatus.IN_PROGRESS;
 
+        currentTurn = 0;
+
         board = new Cell[numberOfRowsCols][numberOfRowsCols];
 
         for (int row = 0; row < numberOfRowsCols; row++)
@@ -40,10 +42,10 @@ public class SuperTicTacToeGame {
 
     public void select(int row, int col) {
         if (currentTurn % 2 == 0) {
-            board[row][col] = Cell.O;
+            board[row][col] = Cell.X;
             currentTurn++;
         } else {
-            board[row][col] = Cell.X;
+            board[row][col] = Cell.O;
             currentTurn++;
         }
     }
