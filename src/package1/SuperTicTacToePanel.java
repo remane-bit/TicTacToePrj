@@ -48,19 +48,30 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
             myPanel.add(whosFirstField);
 
             int result = JOptionPane.showConfirmDialog(null, myPanel,
-                    "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+                    "Please Enter the Following Parameters", JOptionPane.OK_CANCEL_OPTION);
 
-            if (result == JOptionPane.OK_OPTION) {
-                numRowsColsString = rowscolsField.getText();
-                numRowsCols = Integer.parseInt(numRowsColsString);
-
-                numToWinString = inaRowField.getText();
-                numToWin = Integer.parseInt(numToWinString);
-
-                whosFirst = whosFirstField.getText();
-
-                System.out.println(numRowsCols + " " + numToWin + " " + whosFirst);
+            //closes the game if cancel is selected
+            if (result == JOptionPane.CANCEL_OPTION) {
+                System.exit(1);
             }
+
+            // sets variables to inputs and checks for exceptions
+
+            numRowsColsString = rowscolsField.getText();
+            // catches the exception if the input doesn't match up
+            try{
+                numRowsCols = Integer.parseInt(numRowsColsString);
+            }catch(NumberFormatException ex){ // handle your exception
+            }
+
+            numToWinString = inaRowField.getText();
+            // catches the exception if the input doesn't match up
+            try{
+                numToWin = Integer.parseInt(numToWinString);
+            }catch(NumberFormatException ex){ // handle your exception
+            }
+
+            whosFirst = whosFirstField.getText();
 
             if (numRowsCols > 3 && numToWin < 3) {
                 failureFlag = true;
@@ -80,6 +91,19 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
 
             if (numToWin > numRowsCols) {
                 failureFlag = true;
+            }
+
+            if (result == JOptionPane.OK_OPTION) {
+
+                // Clears panel after each iteration of the loop so it doesn't overflow text
+                myPanel.removeAll();
+                myPanel.updateUI();
+
+                // if inputs aren't legitimate prompt user to inform them
+                if (failureFlag) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid set of inputs and " +
+                            "try again!");
+                }
             }
 
         } while(failureFlag);
