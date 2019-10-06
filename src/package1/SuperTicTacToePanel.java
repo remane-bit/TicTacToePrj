@@ -48,7 +48,7 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
             myPanel.add(whosFirstField);
 
             int result = JOptionPane.showConfirmDialog(null, myPanel,
-                    "Please Enter the Following Parameters", JOptionPane.OK_CANCEL_OPTION);
+                    "Tic Tac Toe - Please enter the following parameters to play!", JOptionPane.OK_CANCEL_OPTION);
 
             //closes the game if cancel is selected
             if (result == JOptionPane.CANCEL_OPTION) {
