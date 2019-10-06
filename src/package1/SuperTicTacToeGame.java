@@ -1,5 +1,8 @@
 package package1;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 public class SuperTicTacToeGame {
     private Cell[][] board;
     private GameStatus status;
@@ -7,6 +10,8 @@ public class SuperTicTacToeGame {
     private int numberOfRowsCols;
     private int connectionsToWin;
     private String startsFirst;
+
+    private ArrayList<Point> pastMoves = new ArrayList<Point>();
 
     public SuperTicTacToeGame() {
         newGame();
@@ -24,12 +29,44 @@ public class SuperTicTacToeGame {
                 board[row][col] = Cell.EMPTY;
     }
 
-    public void numberOfConnections(int numOfConnections) {
-        connectionsToWin = numOfConnections;
+    public void setNumberOfConnections(int connectionsToWin) {
+        this.connectionsToWin = connectionsToWin;
     }
 
     public int getConnectionsToWin() {
         return connectionsToWin;
+    }
+
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setConnectionsToWin(int connectionsToWin) {
+        this.connectionsToWin = connectionsToWin;
+    }
+
+    public void setStartsFirst(String startsFirst) {
+        this.startsFirst = startsFirst;
+    }
+
+    public void setNumberOfRowsCols(int numberOfRowsCols) {
+        this.numberOfRowsCols = numberOfRowsCols;
+    }
+
+    public int getNumberOfRowsCols() {
+        return numberOfRowsCols;
     }
 
     public void numberOfRowsCols(int numRowsCols) {
@@ -217,6 +254,24 @@ public class SuperTicTacToeGame {
                     return GameStatus.IN_PROGRESS;
                 }
         return GameStatus.CATS;
+    }
+
+    // takes most recent move and adds it to the arrayList of points
+    public void updatePastMoves(int row, int col) {
+        Point lastMovePoint = new Point(row,col);
+        pastMoves.add(lastMovePoint);
+    }
+
+    //removes the latest move from the board
+    public void undoPastMove() {
+        //gets last element in array and makes a point of it
+        Point latestMove = pastMoves.get(pastMoves.size() - 1);
+
+        //sets board position of point to empty
+        board[latestMove.x][latestMove.y] = Cell.EMPTY;
+
+        //removes the element from the array
+        pastMoves.remove(pastMoves.size() - 1);
     }
 
 }
