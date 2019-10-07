@@ -1,15 +1,17 @@
 package package1;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import javax.swing.JButton;
 
 public class SuperTicTacToePanel extends JPanel implements ActionListener{
 
-    private JButton[][] board;
+    /** Game object **/
+    private SuperTicTacToeGame game;
+
+    private JButton[][] board = new JButton[15][15];
     private Cell[][] iBoard;
     private JButton quitButton;
     private ImageIcon xIcon;
@@ -24,14 +26,15 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
     private boolean failureFlag;
 
 
-    private SuperTicTacToeGame game;
-
     public SuperTicTacToePanel() {
 
+        game = new SuperTicTacToeGame();
 
         JTextField rowscolsField = new JTextField(2);
         JTextField inaRowField = new JTextField(2);
         JTextField whosFirstField = new JTextField(1);
+        xIcon = new ImageIcon("x.jpg");
+        oIcon = new ImageIcon("o.jpg");
 
         JPanel myPanel = new JPanel();
 
@@ -73,25 +76,7 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
 
             whosFirst = whosFirstField.getText();
 
-            if (numRowsCols > 3 && numToWin < 3) {
-                failureFlag = true;
-            }
-
-            if (numRowsCols == 3 && numToWin != 3) {
-                failureFlag = true;
-            }
-
-            if (numRowsCols > 15 || numRowsCols < 2) {
-                failureFlag = true;
-            }
-
-            if (!(whosFirst.equals("X") || whosFirst.equals("x") || whosFirst.equals("O") || whosFirst.equals("o"))) {
-                failureFlag = true;
-            }
-
-            if (numToWin > numRowsCols) {
-                failureFlag = true;
-            }
+            inputParameters();
 
             if (result == JOptionPane.OK_OPTION) {
 
@@ -109,17 +94,78 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
         } while(failureFlag);
 
 
-        xIcon = new ImageIcon("x.jpg");
-        oIcon = new ImageIcon("o.jpg");
-
-
-        quitButton = new JButton("Quit");
-        quitButton.addActionListener(this);
+        setupGUI();
     }
 
-    public void actionPerformed(ActionEvent actionEvent) {
-        if(actionEvent.getSource() == quitButton) {
+    public void actionPerformed(ActionEvent e) {
+
+        Object source = e.getSource();
+
+        if(source == quitButton) {
             System.exit(1);
         }
     }
+
+    /***********************************************************************
+     * This method will set up all the buttons on the GUI
+     **********************************************************************/
+    public void setupGUI() {
+
+        /** Sets the manager for how components are going to be displayed **/
+        setLayout(new GridBagLayout());
+
+        /** Sets the components to be laid out like a grid **/
+        GridBagConstraints position = new GridBagConstraints();
+
+        /** Makes all components fill the entire cell in a GridBagLayout **/
+        position.fill = GridBagConstraints.HORIZONTAL;
+
+        ButtonGroup group = new ButtonGroup();
+
+        /** Board buttons. Letters rep. column position, numbers rep. row position **/
+
+        for(int row = 0; row < 3; row++) {
+            for(int col = 0; col < 3; col++) {
+                System.out.println(row + " " + col);
+
+                board[row][col] = new JButton("");
+                board[row][col].setPreferredSize(new Dimension(100,100));
+                group.add(board[row][col]);
+                position.gridx = row;
+                position.gridy = col;
+                add(board[row][col], position);
+               // board[row][col].addActionListener(game);
+
+            }
+        }
+
+       // quitButton = new JButton("Quit");
+       //quitButton.addActionListener(this);
+
+    }
+
+    public void inputParameters() {
+        if (numRowsCols > 3 && numToWin < 3) {
+            failureFlag = true;
+        }
+
+        if (numRowsCols == 3 && numToWin != 3) {
+            failureFlag = true;
+        }
+
+        if (numRowsCols > 15 || numRowsCols < 2) {
+            failureFlag = true;
+        }
+
+        if (!(whosFirst.equals("X") || whosFirst.equals("x") || whosFirst.equals("O") || whosFirst.equals("o"))) {
+            failureFlag = true;
+        }
+
+        if (numToWin > numRowsCols) {
+            failureFlag = true;
+        }
+    }
+
+
 }
+
