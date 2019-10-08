@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-public class SuperTicTacToePanel extends JPanel implements ActionListener{
+public class SuperTicTacToePanel extends JPanel {
 
     /** Game object **/
     private SuperTicTacToeGame game;
@@ -97,14 +97,6 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
         setupGUI();
     }
 
-    public void actionPerformed(ActionEvent e) {
-
-        Object source = e.getSource();
-
-        if(source == quitButton) {
-            System.exit(1);
-        }
-    }
 
     /***********************************************************************
      * This method will set up all the buttons on the GUI
@@ -120,6 +112,8 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
         /** Makes all components fill the entire cell in a GridBagLayout **/
         position.fill = GridBagConstraints.HORIZONTAL;
 
+        ButtonListener set = new ButtonListener();
+
         ButtonGroup group = new ButtonGroup();
 
         /** Board buttons. Letters rep. column position, numbers rep. row position **/
@@ -134,7 +128,7 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
                 position.gridx = row;
                 position.gridy = col;
                 add(board[row][col], position);
-               // board[row][col].addActionListener(game);
+                board[row][col].addActionListener(set);
 
             }
         }
@@ -166,6 +160,21 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
         }
     }
 
+
+    private class ButtonListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+
+            Object source = e.getSource();
+
+            if(source == quitButton) {
+                System.exit(1);
+            }
+
+           // if(source == board[row][col]) {            }
+        }
+
+    }
 
 }
 
