@@ -2,6 +2,8 @@ package package1;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.lang.Math;
 
 public class SuperTicTacToeGame {
     public Cell[][] board;
@@ -63,18 +65,6 @@ public class SuperTicTacToeGame {
 
     public void setNumberOfRowsCols(int numberOfRowsCols) {
         this.numberOfRowsCols = numberOfRowsCols;
-    }
-
-    public int getNumberOfRowsCols() {
-        return numberOfRowsCols;
-    }
-
-    public void numberOfRowsCols(int numRowsCols) {
-        numberOfRowsCols = numRowsCols;
-    }
-
-    public void whoStartsFirst(String whoStartsFirst) {
-        startsFirst = whoStartsFirst;
     }
 
     public void select(int row, int col) {
@@ -272,6 +262,33 @@ public class SuperTicTacToeGame {
 
         //removes the element from the array
         pastMoves.remove(pastMoves.size() - 1);
+    }
+
+
+    public void randomAI() {
+        Random rand = new Random();
+        int randVal1 = rand.nextInt(numberOfRowsCols);
+        int randVal2 = rand.nextInt(numberOfRowsCols);
+        boolean failureFlag;
+
+        /** Loop will iterate until it finds an empty cell **/
+        do {
+            failureFlag = false;
+
+            if (board[randVal1][randVal2] == Cell.EMPTY) {
+                select(randVal1, randVal2);
+            }
+
+            else {
+                failureFlag = true;
+                randVal1 = rand.nextInt(numberOfRowsCols);
+                randVal2 = rand.nextInt(numberOfRowsCols);
+            }
+
+        } while(failureFlag);
+
+        System.out.println("The AI placed an O at " + randVal1 + " " + randVal2);
+
     }
 
 }

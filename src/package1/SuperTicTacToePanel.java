@@ -98,6 +98,7 @@ public class SuperTicTacToePanel extends JPanel {
         game.setStartsFirst(whosFirst);
         game.newGame();
         setupGUI();
+        game.randomAI();
     }
 
 
@@ -152,8 +153,8 @@ public class SuperTicTacToePanel extends JPanel {
 
 
             /** If any of the tic tac toe buttons are selected, do the following **/
-            for (int Row = 0; Row < 3; Row++) {
-                for(int Col = 0; Col < 3; Col++) {
+            for (int Row = 0; Row < numRowsCols; Row++) {
+                for(int Col = 0; Col < numRowsCols; Col++) {
                     if (Jboard[Row][Col] == source) {
                         System.out.println("You clicked at " + Row + "," + Col);
                         game.select(Row,Col);
@@ -164,6 +165,9 @@ public class SuperTicTacToePanel extends JPanel {
                     }
                 }
             }
+
+
+
 
            // if(source == board[row][col]) {            }
         }
@@ -186,13 +190,15 @@ public class SuperTicTacToePanel extends JPanel {
 
         /** Board buttons. Letters rep. column position, numbers rep. row position **/
 
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 3; col++) {
+        for(int row = 0; row < numRowsCols; row++) {
+            for(int col = 0; col < numRowsCols; col++) {
                 //System.out.println(row + " " + col);
 
-                Font f = new Font("Dialog", Font.PLAIN, 72);
+                int size = 72; // Make if statements to adjust as size increases
+                int sizeOfCell = 100;
+                Font f = new Font("Dialog", Font.PLAIN, size);
                 Jboard[row][col] = new JButton("");
-                Jboard[row][col].setPreferredSize(new Dimension(100,100));
+                Jboard[row][col].setPreferredSize(new Dimension(sizeOfCell,sizeOfCell));
                 group.add(Jboard[row][col]);
                 position.gridx = row;
                 position.gridy = col;
