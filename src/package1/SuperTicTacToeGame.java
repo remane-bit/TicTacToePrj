@@ -242,7 +242,7 @@ public class SuperTicTacToeGame {
             }
 
         } while(failureFlag);
-
+        updatePastMoves(randVal1, randVal2);
         System.out.println("The AI placed an O at " + randVal1 + " " + randVal2);
 
     }
