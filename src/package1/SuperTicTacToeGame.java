@@ -4,6 +4,34 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+/************************************************
+ * A *Super* tic tac toe game! The user chooses how
+ * big they want their board to be (Min 3x3, max 15x15)
+ * and can play against the computer!
+ *
+ * HOW TO PLAY:
+ * A window will prompt the user to put in the board size,
+ * the amount of X's or O's needed to be in a row to win,
+ * and if the user or AI will go first.
+ *
+ * If the user opted to go first, they can click anywhere
+ * on the board to make their move. If they don't like it,
+ * they may undo.
+ *
+ * Once the user finalizes their move, the user MUST
+ * click on the AI turn button to have the computer make
+ * their move.
+ *
+ * The game will progress until the user wins, computer
+ * wins, or there is a draw.
+ *
+ * @author Max Ziegler
+ * @author Remy Merriman
+ * @version Fall 2019
+ ***************************************************/
+
+
 public class SuperTicTacToeGame {
     public Cell[][] board;
     private GameStatus status;
@@ -15,7 +43,8 @@ public class SuperTicTacToeGame {
     private ArrayList<Point> pastMoves = new ArrayList<Point>();
 
     /************************************************************
-     * Default constructor for the SuperTicTacToeGame
+     * Default constructor for the SuperTicTacToeGame. All it does
+     * is start a new game.
      ************************************************************/
     public SuperTicTacToeGame() {
         newGame();
