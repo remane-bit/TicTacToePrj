@@ -11,6 +11,7 @@ public class SuperTicTacToePanel extends JPanel {
     /** Game object **/
     private SuperTicTacToeGame game;
 
+    private GameStatus Status;
     private JButton[][] Jboard = new JButton[15][15];
     private Cell[][] iBoard;
     private JButton quitButton , undoButton, AIturnButton;
@@ -206,6 +207,9 @@ public class SuperTicTacToePanel extends JPanel {
                         System.out.println("You clicked at " + Row + "," + Col);
                         game.select(Row,Col);
                         game.updatePastMoves(Row, Col);
+
+                        checkGameState(Row, Col);
+
                         updateBoard();
                         System.out.println("There is now an X at " + Row + "," + Col);
                         Jboard[Row][Col].setEnabled(false);
@@ -221,7 +225,7 @@ public class SuperTicTacToePanel extends JPanel {
                 //Prompt a window stating a cats game
             }
             // if(source == board[row][col]) {            }
-
+            //wholeBoardCheck();
         }
 
     }
@@ -289,6 +293,23 @@ public class SuperTicTacToePanel extends JPanel {
                     Jboard[Row][Col].setEnabled(true);
                 }
 
+            }
+        }
+    }
+
+    private void checkGameState(int row, int col) {
+       if(game.checkForX(row, col) == GameStatus.X_WON) System.out.println("Sicko mode");
+       if(game.checkForO(row, col) == GameStatus.O_WON) System.out.println("You lose");
+       if(game.checkForCats(row,col) == GameStatus.CATS) System.out.println("Tie Game");
+    }
+
+
+
+    /** This method is merely a test. Can be deleted out of the final code **/
+    private void wholeBoardCheck() {
+        for (int Row = 0; Row < numRowsCols; Row++) {
+            for (int Col = 0; Col < numRowsCols; Col++) {
+                checkGameState(Row,Col);
             }
         }
     }
