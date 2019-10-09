@@ -41,67 +41,7 @@ public class SuperTicTacToePanel extends JPanel {
         game = new SuperTicTacToeGame();
 
         /** Popup window the user will see, prompting them to fill data in **/
-        JTextField rowscolsField = new JTextField(2);
-        JTextField inaRowField = new JTextField(2);
-        JTextField whosFirstField = new JTextField(1);
-        JPanel myPanel = new JPanel();
-
-        /** This do-while loop will have the window popup over and over again if the user does not put the
-         * proper input in **/
-        do {
-            failureFlag = false;
-
-            myPanel.add(new JLabel("Number of Rows and Columns:"));
-            myPanel.add(rowscolsField);
-
-            myPanel.add(new JLabel("How Many Need to be in a Row to Win?:"));
-            myPanel.add(inaRowField);
-
-            myPanel.add(new JLabel("Who Goes First (Please enter X of O):"));
-            myPanel.add(whosFirstField);
-
-            int result = JOptionPane.showConfirmDialog(null, myPanel,
-                    "Tic Tac Toe - Please enter the following parameters to play!", JOptionPane.OK_CANCEL_OPTION);
-
-            //closes the game if cancel is selected
-            if (result == JOptionPane.CANCEL_OPTION) {
-                System.exit(1);
-            }
-
-            // sets variables to inputs and checks for exceptions
-
-            numRowsColsString = rowscolsField.getText();
-            // catches the exception if the input doesn't match up
-            try{
-                numRowsCols = Integer.parseInt(numRowsColsString);
-            }catch(NumberFormatException ex){ // handle your exception
-            }
-
-            numToWinString = inaRowField.getText();
-            // catches the exception if the input doesn't match up
-            try{
-                numToWin = Integer.parseInt(numToWinString);
-            }catch(NumberFormatException ex){ // handle your exception
-            }
-
-            whosFirst = whosFirstField.getText();
-
-            inputParameters();
-
-            if (result == JOptionPane.OK_OPTION) {
-
-                // Clears panel after each iteration of the loop so it doesn't overflow text
-                myPanel.removeAll();
-                myPanel.updateUI();
-
-                // if inputs aren't legitimate prompt user to inform them
-                if (failureFlag) {
-                    JOptionPane.showMessageDialog(null, "Please enter a valid set of inputs and " +
-                            "try again!");
-                }
-            }
-
-        } while(failureFlag);
+        promptWindow();
 
         /** This sends the data received to the game object, which sends it to the Game.java **/
         game.setNumberOfRowsCols(numRowsCols);
@@ -141,7 +81,7 @@ public class SuperTicTacToePanel extends JPanel {
         quitButton = new JButton("Quit");
         undoButton = new JButton("Undo");
         AIturnButton = new JButton("AI Turn");
-        resetButton = new JButton("Reset");
+        resetButton = new JButton("New Game");
 
         /** Declaration of the buttons **/
         group.add(quitButton);
@@ -221,6 +161,10 @@ public class SuperTicTacToePanel extends JPanel {
             setBoardLocked();
         }
 
+        if(First == 'X' || First == 'x') {
+            AIturnButton.setEnabled(false);
+        }
+
     }
 
 
@@ -242,11 +186,16 @@ public class SuperTicTacToePanel extends JPanel {
 
             /** If undo button is pressed, undo the past move and update the board accordingly **/
             if(source == undoButton) {
+                //if users turn, do this:
+
                 game.undoPastMove();
                 game.setCurrentTurn(game.getCurrentTurn() - 1);
                 updateBoard();
+
                 AIturnButton.setEnabled(true);
                 reEnableEmpty();
+
+                // if AI's turn disable the GUI buttons and reenable the AI button
             }
 
             /** Once the user selects a position on the board, press the AI's turn button to continue the game at your
@@ -256,15 +205,23 @@ public class SuperTicTacToePanel extends JPanel {
                 updateBoard();
                 reEnableEmpty();
                 AIturnButton.setEnabled(false);
+                //To have AI win, we need to get the randVal1 and 2 from the AI method
+                checkGameState(game.getAImoveX(), game.getAImoveY());
             }
 
             /** If the reset button is pressed, start a new game **/
             if(source == resetButton) {
                 char First = whosFirst.charAt(0);
 
+               // promptWindow();
+               // game.setNumberOfRowsCols(numRowsCols);
+               // game.setConnectionsToWin(numToWin);
+               // game.setStartsFirst(whosFirst);
+
                 /** If the user chose to go first, they will go first if they chose it inititally **/
                 if(First == 'X' || First == 'x'){
                     game.newGame();
+                    //displayBoard();
                     reEnableEmpty();
                     AIturnButton.setEnabled(false);
                 }
@@ -272,6 +229,7 @@ public class SuperTicTacToePanel extends JPanel {
                 /** If the AI went first, they will continue to go as the game progresses **/
                 else if (First == 'O' || First == 'o') {
                     game.newGame();
+                    //displayBoard();
                     reEnableEmpty();
                     AIturnButton.setEnabled(true);
                     setBoardLocked();
@@ -390,22 +348,93 @@ public class SuperTicTacToePanel extends JPanel {
      * with the according message.
      **************************************************************************/
     private void checkGameState(int row, int col) {
+        System.out.println("Checking for X winner");
         if(game.checkForX(row, col) == GameStatus.X_WON) {
             JOptionPane.showMessageDialog(null, "X won the game!");
             AIturnButton.setEnabled(false);
             return;
         }
 
+        System.out.println("Checking for O winner");
         if(game.checkForO(row, col) == GameStatus.O_WON) {
             JOptionPane.showMessageDialog(null, "The AI won the game!");
             setBoardLocked();
             return;
         }
 
+        System.out.println("Checking for tie game");
         if(game.checkForCats(row,col) == GameStatus.CATS) {
             JOptionPane.showMessageDialog(null, "Tie game!");
             return;
         }
+    }
+
+    /*************************************************************
+     * Popup window the user will see, prompting them to fill
+     * data in
+     *************************************************************/
+    private void promptWindow() {
+        JTextField rowscolsField = new JTextField(2);
+        JTextField inaRowField = new JTextField(2);
+        JTextField whosFirstField = new JTextField(1);
+        JPanel myPanel = new JPanel();
+
+        /** This do-while loop will have the window popup over and over again if the user does not put the
+         * proper input in **/
+        do {
+            failureFlag = false;
+
+            myPanel.add(new JLabel("Number of Rows and Columns:"));
+            myPanel.add(rowscolsField);
+
+            myPanel.add(new JLabel("How Many Need to be in a Row to Win?:"));
+            myPanel.add(inaRowField);
+
+            myPanel.add(new JLabel("Who Goes First (Please enter X of O):"));
+            myPanel.add(whosFirstField);
+
+            int result = JOptionPane.showConfirmDialog(null, myPanel,
+                    "Tic Tac Toe - Please enter the following parameters to play!", JOptionPane.OK_CANCEL_OPTION);
+
+            //closes the game if cancel is selected
+            if (result == JOptionPane.CANCEL_OPTION) {
+                System.exit(1);
+            }
+
+            // sets variables to inputs and checks for exceptions
+
+            numRowsColsString = rowscolsField.getText();
+            // catches the exception if the input doesn't match up
+            try{
+                numRowsCols = Integer.parseInt(numRowsColsString);
+            }catch(NumberFormatException ex){ // handle your exception
+            }
+
+            numToWinString = inaRowField.getText();
+            // catches the exception if the input doesn't match up
+            try{
+                numToWin = Integer.parseInt(numToWinString);
+            }catch(NumberFormatException ex){ // handle your exception
+            }
+
+            whosFirst = whosFirstField.getText();
+
+            inputParameters();
+
+            if (result == JOptionPane.OK_OPTION) {
+
+                // Clears panel after each iteration of the loop so it doesn't overflow text
+                myPanel.removeAll();
+                myPanel.updateUI();
+
+                // if inputs aren't legitimate prompt user to inform them
+                if (failureFlag) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid set of inputs and " +
+                            "try again!");
+                }
+            }
+
+        } while(failureFlag);
     }
 }
 

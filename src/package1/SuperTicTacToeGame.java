@@ -39,6 +39,41 @@ public class SuperTicTacToeGame {
     private int numberOfRowsCols;
     private int connectionsToWin;
     private String startsFirst;
+    private int AImoveX;
+    private int AImoveY;
+
+
+    /****************************************************
+     * The computers move in the x axis getter
+     * @return AImoveX
+     *****************************************************/
+    public int getAImoveX() {
+        return AImoveX;
+    }
+
+    /****************************************************
+     * The computers move in the x axis setter
+     * @param AImoveX
+     *****************************************************/
+    public void setAImoveX(int AImoveX) {
+        this.AImoveX = AImoveX;
+    }
+
+    /****************************************************
+     * The computers move in the y axis getter
+     * @return AImoveY
+     *****************************************************/
+    public int getAImoveY() {
+        return AImoveY;
+    }
+
+    /****************************************************
+     * The computers move in the x axis setter
+     * @param AImoveY
+     *****************************************************/
+    public void setAImoveY(int AImoveY) {
+        this.AImoveY = AImoveY;
+    }
 
     private ArrayList<Point> pastMoves = new ArrayList<Point>();
 
@@ -72,6 +107,7 @@ public class SuperTicTacToeGame {
 
     /**************************************************************
      * The amount of connections need to win getter
+     * @return connectionsToWin
      *************************************************************/
     public int getConnectionsToWin() {
         return connectionsToWin;
@@ -87,6 +123,7 @@ public class SuperTicTacToeGame {
 
     /**************************************************************
      * Game status getter
+     * @return status
      *************************************************************/
     public GameStatus getStatus() {
         return status;
@@ -102,6 +139,7 @@ public class SuperTicTacToeGame {
 
     /**************************************************************
      * The getter for who's current turn it is
+     * @return currentTurn
      *************************************************************/
     public int getCurrentTurn() {
         return currentTurn;
@@ -231,7 +269,7 @@ public class SuperTicTacToeGame {
      * @return GameStatus.IN_PROGRESS
      *************************************************************/
     public GameStatus checkForO(int row, int col) {
-        boolean checkWinner = false;
+       /* boolean checkWinner = false;
 
         // check for row win
         int colCounter = 0;
@@ -280,7 +318,60 @@ public class SuperTicTacToeGame {
         if (checkWinner) {
             return GameStatus.O_WON;
         }
+        return GameStatus.IN_PROGRESS;*/
+
+        boolean CheckWinner = false;
+
+        // check for row win
+        int RowCounter = 0;
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[row][i] == Cell.O)
+                RowCounter++;
+            if(RowCounter == connectionsToWin){
+                CheckWinner = true;
+            }
+        }
+
+        //check for col win
+        int ColCounter = 0;
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[i][col] == Cell.O)
+                ColCounter++;
+            if(ColCounter == connectionsToWin){
+                CheckWinner = true;
+            }
+        }
+
+        //check for a diagonal win
+        int DiagCounter = 0;
+        if(row == col){
+            for(int i = 0; i < numberOfRowsCols; i++){
+                if(board[i][i] == Cell.O)
+                    DiagCounter++;
+                if(DiagCounter == connectionsToWin){
+                    CheckWinner = true;
+                }
+            }
+        }
+
+        //check for a reverse diagonal win
+        int RevDiagCounter = 0;
+        if(row + col == numberOfRowsCols - 1) {
+            for (int i = 0; i < numberOfRowsCols; i++) {
+                if (board[i][(numberOfRowsCols - 1) - i] == Cell.O)
+                    RevDiagCounter++;
+                if (RevDiagCounter == connectionsToWin) {
+                    CheckWinner = true;
+                }
+            }
+        }
+
+        if (CheckWinner) {
+            System.out.println("O WINS");
+            return GameStatus.O_WON;
+        }
         return GameStatus.IN_PROGRESS;
+
     }
 
     /**************************************************************
@@ -376,7 +467,10 @@ public class SuperTicTacToeGame {
             }
 
         } while(failureFlag);
+
         updatePastMoves(randVal1, randVal2);
+        setAImoveX(randVal1);
+        setAImoveY(randVal2);
         System.out.println("The AI placed an O at " + randVal1 + " " + randVal2);
 
     }
