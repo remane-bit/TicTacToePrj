@@ -185,6 +185,7 @@ public class SuperTicTacToePanel extends JPanel {
                     if (Jboard[Row][Col] == source) {
                         System.out.println("You clicked at " + Row + "," + Col);
                         game.select(Row,Col);
+                        game.updatePastMoves(Row, Col);
                         System.out.println("There is now an X at " + Row + "," + Col);
                         //Make the x appear on the GUI
                         Jboard[Row][Col].setText("X");
