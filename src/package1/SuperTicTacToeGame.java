@@ -452,15 +452,15 @@ public class SuperTicTacToeGame {
                 AIxMove = numberOfRowsCols;
                 AIyMove = numberOfRowsCols;
             }
-
-            //AI goes right into attack mode
-            AttackMode = true;
         }
 
         //Now it should scan the board to see if the user can win in anyway. If the user can win,
         // go into defend mode. Else attack mode.
 
         else {
+
+            AttackMode = false;
+            DefenedMode = false;
 
             System.out.println("AI is searching for spot");
 
@@ -551,12 +551,13 @@ public class SuperTicTacToeGame {
                 }
             }
 
+
                 if (AttackMode) {
-                    AttackMode = false;
+                    System.out.println("Attacking");
                     select(AIxMove, AIyMove);
                 }
                 else if (DefenedMode) {
-                    DefenedMode = false;
+                    System.out.println("Defending");
                     select(AIxMove, AIyMove);
                 }
 
@@ -584,12 +585,16 @@ public class SuperTicTacToeGame {
 
                     } while (failureFlag);
 
+
                     updatePastMoves(randVal1, randVal2);
                     setAImoveX(randVal1);
                     setAImoveY(randVal2);
+                    select(randVal1, randVal2);
                     System.out.println("The AI placed an O randomly at " + randVal1 + " " + randVal2);
 
                 }
+                AttackMode = false;
+                DefenedMode = false;
 
 
             }
