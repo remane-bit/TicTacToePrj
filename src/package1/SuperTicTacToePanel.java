@@ -103,35 +103,7 @@ public class SuperTicTacToePanel extends JPanel {
      **********************************************************************/
     public void setupGUI() {
 
-        /** Sets the manager for how components are going to be displayed **/
-        setLayout(new GridBagLayout());
-
-        /** Sets the components to be laid out like a grid **/
-        GridBagConstraints position = new GridBagConstraints();
-
-        /** Makes all components fill the entire cell in a GridBagLayout **/
-        position.fill = GridBagConstraints.HORIZONTAL;
-
-        ButtonListener set = new ButtonListener();
-
-        ButtonGroup group = new ButtonGroup();
-
-        /** Board buttons. Letters rep. column position, numbers rep. row position **/
-
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 3; col++) {
-                System.out.println(row + " " + col);
-
-                board[row][col] = new JButton("");
-                board[row][col].setPreferredSize(new Dimension(100,100));
-                group.add(board[row][col]);
-                position.gridx = row;
-                position.gridy = col;
-                add(board[row][col], position);
-                board[row][col].addActionListener(set);
-
-            }
-        }
+        displayBoard();
 
        // quitButton = new JButton("Quit");
        //quitButton.addActionListener(this);
@@ -171,9 +143,49 @@ public class SuperTicTacToePanel extends JPanel {
                 System.exit(1);
             }
 
+            for (int row = 0; row < 3; row++) {
+                for(int col = 0; col < 3; col++) {
+                    if (board[row][col] == source) {
+                        System.out.println("You clicked at " + row + "," + col);
+                    }
+                }
+            }
+
            // if(source == board[row][col]) {            }
         }
 
+    }
+
+    private  void displayBoard() {
+        /** Sets the manager for how components are going to be displayed **/
+        setLayout(new GridBagLayout());
+
+        /** Sets the components to be laid out like a grid **/
+        GridBagConstraints position = new GridBagConstraints();
+
+        /** Makes all components fill the entire cell in a GridBagLayout **/
+        position.fill = GridBagConstraints.HORIZONTAL;
+
+        ButtonListener set = new ButtonListener();
+
+        ButtonGroup group = new ButtonGroup();
+
+        /** Board buttons. Letters rep. column position, numbers rep. row position **/
+
+        for(int row = 0; row < 3; row++) {
+            for(int col = 0; col < 3; col++) {
+                System.out.println(row + " " + col);
+
+                board[row][col] = new JButton("");
+                board[row][col].setPreferredSize(new Dimension(100,100));
+                group.add(board[row][col]);
+                position.gridx = row;
+                position.gridy = col;
+                add(board[row][col], position);
+                board[row][col].addActionListener(set);
+
+            }
+        }
     }
 
 }
