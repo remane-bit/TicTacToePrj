@@ -33,10 +33,6 @@ public class SuperTicTacToeGame {
         }
     }
 
-    public void setNumberOfConnections(int connectionsToWin) {
-        this.connectionsToWin = connectionsToWin;
-    }
-
     public int getConnectionsToWin() {
         return connectionsToWin;
     }
