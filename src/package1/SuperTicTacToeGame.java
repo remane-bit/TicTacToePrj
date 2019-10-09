@@ -199,57 +199,61 @@ public class SuperTicTacToeGame {
         }
     }
 
-    private boolean validRowCol(int row, int col) {
-        return row >= 0 && row < numberOfRowsCols && col >= 0 && col < numberOfRowsCols;
-    }
-
-    private GameStatus checkGameStatus(Cell player, int row, int col, int count, int rowIncrement, int colIncrement) {
-        if (validRowCol(row, col)) {
-            if (board[row][col] == player) {
-                count++;
-                if (count >= connectionsToWin) {
-                    if (player == Cell.O) {
-                        return GameStatus.O_WON;
-                    }
-
-                    return GameStatus.X_WON;
-                }
-
-                return checkGameStatus(player, row + rowIncrement, col + colIncrement, count, rowIncrement, colIncrement);
-            }
-        }
-        return GameStatus.IN_PROGRESS;
-    }
-
-    private boolean checkPlayerGameWin(Cell player, int row, int col, int rowIncrement, int colIncrement) {
-        GameStatus status = checkGameStatus(player, row, col, 0, rowIncrement, colIncrement);
-        return status == GameStatus.X_WON || status == GameStatus.O_WON;
-    }
-
-    private boolean checkPlayerRowWin(Cell player, int row, int col) {
-        return checkPlayerGameWin(player, row, col, 1, 0);
-    }
-
-    private boolean checkPlayerColumnWin(Cell player, int row, int col) {
-        return checkPlayerGameWin(player, row, col,  0, 1);
-    }
-
-    private boolean checkPlayerDiagonalWin(Cell player, int row, int col) {
-        return checkPlayerGameWin(player, row, col,  1, 1) ||
-                checkPlayerGameWin(player, row, col,  -1, -1);
-    }
-
-    public boolean checkPlayerWin(Cell player) {
+    private boolean checkPlayerRowWin(Cell player) {
         for (int row = 0; row < numberOfRowsCols; row++) {
-            for (int col = 0; col < numberOfRowsCols; col++) {
-                if (checkPlayerRowWin(player, row, col) ||
-                        checkPlayerColumnWin(player, row, col) ||
-                        checkPlayerDiagonalWin(player, row, col) ) {
-                    return true;
-                }
+            int col = 0;
+            while (col < numberOfRowsCols && board[row][col] == player) {
+                col++;
+            }
+            if (col == numberOfRowsCols) {
+                return true;
             }
         }
+
         return false;
+    }
+
+    private boolean checkPlayerColumnWin(Cell player) {
+        for (int col = 0; col < numberOfRowsCols; col++) {
+            int row = 0;
+            while (row < numberOfRowsCols && board[row][col] == player) {
+                row++;
+            }
+            if (row == numberOfRowsCols) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkPlayerDiagonalWin(Cell player) {
+        int i = 0;
+
+        // check forward diagonal
+        while (i < numberOfRowsCols && board[i][i] == player) {
+            i++;
+        }
+
+        if (i == numberOfRowsCols) {
+            return true;
+        }
+
+        // check backward diagonal
+        i = 0;
+        while (i < numberOfRowsCols && board[i][numberOfRowsCols - i - 1] == player) {
+            i++;
+        }
+
+        if (i == numberOfRowsCols) {
+            return true;
+        }
+
+        return false;
+    }
+
+    boolean checkPlayerWin(Cell player) {
+        return checkPlayerRowWin(player) || checkPlayerColumnWin(player) || checkPlayerDiagonalWin(player);
     }
 
     private boolean areAnyMovesLeft() {
