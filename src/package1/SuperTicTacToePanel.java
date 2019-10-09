@@ -13,7 +13,8 @@ public class SuperTicTacToePanel extends JPanel {
 
     private JButton[][] Jboard = new JButton[15][15];
     private Cell[][] iBoard;
-    private JButton quitButton;
+    private JButton quitButton , undoButton, AIturnButton;
+    private JLabel spacing;
     private ImageIcon xIcon;
     private ImageIcon oIcon;
     private ImageIcon emptyIcon;
@@ -111,8 +112,10 @@ public class SuperTicTacToePanel extends JPanel {
         System.out.println("New game created");
         displayBoard();
 
+
+
        // quitButton = new JButton("Quit");
-       //quitButton.addActionListener(this);
+      //  quitButton.addActionListener(this);
 
     }
 
@@ -149,7 +152,14 @@ public class SuperTicTacToePanel extends JPanel {
                 System.exit(1);
             }
 
+            if(source == undoButton) {
+                game.undoPastMove();
+            }
 
+            if(source == AIturnButton) {
+                game.randomAI();
+                //Jboard[]
+            }
 
 
             /** If any of the tic tac toe buttons are selected, do the following **/
@@ -161,6 +171,7 @@ public class SuperTicTacToePanel extends JPanel {
                         System.out.println("There is now an X at " + Row + "," + Col);
                         //Make the x appear on the GUI
                         Jboard[Row][Col].setText("X");
+                        Jboard[Row][Col].setEnabled(false);
 
                     }
                 }
@@ -188,6 +199,35 @@ public class SuperTicTacToePanel extends JPanel {
 
         ButtonGroup group = new ButtonGroup();
 
+        /** Add comments **/
+        quitButton = new JButton("Quit");
+        undoButton = new JButton("Undo");
+        AIturnButton = new JButton("AI Turn");
+        spacing = new JLabel("           ");
+
+        group.add(quitButton);
+        group.add(undoButton);
+        group.add(AIturnButton);
+
+        quitButton.setPreferredSize(new Dimension(100,30));
+        position.gridx = 0;
+        position.gridy = 0;
+        add(quitButton, position);
+        quitButton.addActionListener(set);
+
+        undoButton.setPreferredSize(new Dimension(100,30));
+        position.gridx = 0;
+        position.gridy = 1;
+        add(undoButton, position);
+        undoButton.addActionListener(set);
+
+        AIturnButton.setPreferredSize(new Dimension(100,30));
+        position.gridx = 0;
+        position.gridy = 2;
+        add(AIturnButton, position);
+        AIturnButton.addActionListener(set);
+
+
         /** Board buttons. Letters rep. column position, numbers rep. row position **/
 
         for(int row = 0; row < numRowsCols; row++) {
@@ -201,13 +241,16 @@ public class SuperTicTacToePanel extends JPanel {
                 Jboard[row][col].setPreferredSize(new Dimension(sizeOfCell,sizeOfCell));
                 group.add(Jboard[row][col]);
                 position.gridx = row;
-                position.gridy = col;
+                position.gridy = col + 3;
                 add(Jboard[row][col], position);
                 Jboard[row][col].addActionListener(set);
                 Jboard[row][col].setFont(f);
 
             }
         }
+
+
+
     }
 
 }
