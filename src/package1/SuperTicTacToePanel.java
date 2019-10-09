@@ -242,10 +242,11 @@ public class SuperTicTacToePanel extends JPanel {
 
                         updateBoard();
                        // System.out.println("There is now an X at " + Row + "," + Col);
+                        AIturnButton.setEnabled(true);
                         checkGameState(Row, Col);
                         setBoardLocked();
                         Jboard[Row][Col].setEnabled(false);
-                        AIturnButton.setEnabled(true);
+                       // AIturnButton.setEnabled(true);
                     }
                 }
             }
@@ -339,8 +340,14 @@ public class SuperTicTacToePanel extends JPanel {
     }
 
     private void checkGameState(int row, int col) {
-       if(game.checkForX(row, col) == GameStatus.X_WON) JOptionPane.showMessageDialog(null, "X won the game!");;
-       if(game.checkForO(row, col) == GameStatus.O_WON) JOptionPane.showMessageDialog(null, "The AI won the game!");
+       if(game.checkForX(row, col) == GameStatus.X_WON) {
+           JOptionPane.showMessageDialog(null, "X won the game!");
+           AIturnButton.setEnabled(false);
+       }
+       if(game.checkForO(row, col) == GameStatus.O_WON) {
+           JOptionPane.showMessageDialog(null, "The AI won the game!");
+           setBoardLocked();
+       }
        if(game.checkForCats(row,col) == GameStatus.CATS) JOptionPane.showMessageDialog(null, "Tie game!");
     }
 
