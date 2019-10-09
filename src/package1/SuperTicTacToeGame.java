@@ -68,12 +68,27 @@ public class SuperTicTacToeGame {
     }
 
     public void select(int row, int col) {
-        if (currentTurn % 2 == 0) {
-            board[row][col] = Cell.X;
-            currentTurn++;
-        } else {
-            board[row][col] = Cell.O;
-            currentTurn++;
+
+        char first = startsFirst.charAt(0);
+
+        if(first == 'X' || first == 'x') {
+            if (currentTurn % 2 == 0) {
+                board[row][col] = Cell.X;
+                currentTurn++;
+            } else {
+                board[row][col] = Cell.O;
+                currentTurn++;
+            }
+        }
+
+        else if(first == 'O' || first == 'o') {
+            if (currentTurn % 2 == 1) {
+                board[row][col] = Cell.X;
+                currentTurn++;
+            } else {
+                board[row][col] = Cell.O;
+                currentTurn++;
+            }
         }
     }
 
