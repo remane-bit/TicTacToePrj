@@ -184,26 +184,29 @@ public class SuperTicTacToePanel extends JPanel {
         for(int row = 0; row < numRowsCols; row++) {
             for(int col = 0; col < numRowsCols; col++) {
 
+                /** If the grid is 5x5 of less, have large font and cells **/
                 if(numRowsCols < 6) {
-                    size = 72;
-                    sizeOfCell = 100;
+                    size = 80;
+                    sizeOfCell = 120;
                 }
 
+                /** IF the grid is between 5x5 and 10x10, have medium font and cells **/
                 else if(numRowsCols >= 6 && numRowsCols < 11) {
-                    size = 48;
-                    sizeOfCell = 66;
+                    size = 40;
+                    sizeOfCell = 70;
                 }
 
+                /** IF the grid is between 10x10 and 15x15, have small font and cells **/
                 else if(numRowsCols >= 11 && numRowsCols < 16) {
-                    size = 24;
-                    sizeOfCell = 33;
+                    size = 15;
+                    sizeOfCell = 50;
                 }
 
                 Font f = new Font("Dialog", Font.PLAIN, size);
                 Jboard[row][col] = new JButton("");
                 Jboard[row][col].setPreferredSize(new Dimension(sizeOfCell,sizeOfCell));
                 group.add(Jboard[row][col]);
-                position.gridx = row;
+                position.gridx = row + 1;
                 position.gridy = col + 4;
                 add(Jboard[row][col], position);
                 Jboard[row][col].addActionListener(set);
@@ -212,6 +215,7 @@ public class SuperTicTacToePanel extends JPanel {
             }
         }
 
+        /** If AI is going first, lock the board so the user doesn't make their choice for them! **/
         char First = whosFirst.charAt(0);
         if(First == 'O' || First == 'o') {
             setBoardLocked();
@@ -220,19 +224,23 @@ public class SuperTicTacToePanel extends JPanel {
     }
 
 
-    /**********************
-     * Action Listener
-     *********************/
     private class ButtonListener implements ActionListener {
 
+
+        /**********************************************************************
+         * This method will execute the actions if the button is pressed
+         * @param e
+         ********************************************************************/
         public void actionPerformed(ActionEvent e) {
 
             Object source = e.getSource();
 
+            /** If quit button is pressed, quit the program **/
             if(source == quitButton) {
                 System.exit(1);
             }
 
+            /** If undo button is pressed, undo the past move and update the board accordingly **/
             if(source == undoButton) {
                 game.undoPastMove();
                 game.setCurrentTurn(game.getCurrentTurn() - 1);
@@ -241,6 +249,8 @@ public class SuperTicTacToePanel extends JPanel {
                 reEnableEmpty();
             }
 
+            /** Once the user selects a position on the board, press the AI's turn button to continue the game at your
+             * own pace **/
             if(source == AIturnButton) {
                 game.randomAI();
                 updateBoard();
@@ -248,14 +258,18 @@ public class SuperTicTacToePanel extends JPanel {
                 AIturnButton.setEnabled(false);
             }
 
+            /** If the reset button is pressed, start a new game **/
             if(source == resetButton) {
                 char First = whosFirst.charAt(0);
+
+                /** If the user chose to go first, they will go first if they chose it inititally **/
                 if(First == 'X' || First == 'x'){
                     game.newGame();
                     reEnableEmpty();
                     AIturnButton.setEnabled(false);
                 }
 
+                /** If the AI went first, they will continue to go as the game progresses **/
                 else if (First == 'O' || First == 'o') {
                     game.newGame();
                     reEnableEmpty();
@@ -268,17 +282,13 @@ public class SuperTicTacToePanel extends JPanel {
             for (int Row = 0; Row < numRowsCols; Row++) {
                 for(int Col = 0; Col < numRowsCols; Col++) {
                     if (Jboard[Row][Col] == source) {
-                       // System.out.println("You clicked at " + Row + "," + Col);
                         game.select(Row,Col);
                         game.updatePastMoves(Row, Col);
-
                         updateBoard();
-                       // System.out.println("There is now an X at " + Row + "," + Col);
                         AIturnButton.setEnabled(true);
                         checkGameState(Row, Col);
                         setBoardLocked();
                         Jboard[Row][Col].setEnabled(false);
-                       // AIturnButton.setEnabled(true);
                     }
                 }
             }
@@ -287,17 +297,14 @@ public class SuperTicTacToePanel extends JPanel {
             /** If there are no more moves in the game, disable the AI's turn button **/
             if(game.getCurrentTurn() == (numRowsCols * numRowsCols)) {
                 AIturnButton.setEnabled(false);
-                //Prompt a window stating a cats game
             }
-            // if(source == board[row][col]) {            }
-            //wholeBoardCheck();
         }
 
     }
 
-    /***********************************************
-     * Conditionals for the iniitial parameters.
-     */
+    /**************************************************************************
+     * This method contains the conditionals for the iniitial parameters.
+     **************************************************************************/
     public void inputParameters() {
         if (numRowsCols > 3 && numToWin < 3) {
             failureFlag = true;
@@ -320,11 +327,10 @@ public class SuperTicTacToePanel extends JPanel {
         }
     }
 
-
-
-
-
-
+    /**************************************************************************
+     * This method updates the board, by checking every single cell, and outputting
+     * the output (X, O, nothing)
+     **************************************************************************/
     private void updateBoard() {
         iBoard = game.getBoard();
         for (int Row = 0; Row < numRowsCols; Row++) {
@@ -348,6 +354,9 @@ public class SuperTicTacToePanel extends JPanel {
         }
     }
 
+    /**************************************************************************
+     * This method contains the conditionals for the iniitial parameters.
+     **************************************************************************/
     private void reEnableEmpty() {
         iBoard = game.getBoard();
         for (int Row = 0; Row < numRowsCols; Row++) {
@@ -362,6 +371,11 @@ public class SuperTicTacToePanel extends JPanel {
         }
     }
 
+    /**************************************************************************
+     * Disables any buttons from being pressed on the tic tac toe board. Board
+     * is locked when somebody wins a game, or if it is no longer the user's
+     * turn
+     **************************************************************************/
     private void setBoardLocked() {
         iBoard = game.getBoard();
         for (int Row = 0; Row < numRowsCols; Row++) {
@@ -371,7 +385,10 @@ public class SuperTicTacToePanel extends JPanel {
         }
     }
 
-
+    /**************************************************************************
+     * Checks to see if any Game Statuses were met. If so, display a window
+     * with the according message.
+     **************************************************************************/
     private void checkGameState(int row, int col) {
         if(game.checkForX(row, col) == GameStatus.X_WON) {
             JOptionPane.showMessageDialog(null, "X won the game!");
@@ -390,17 +407,5 @@ public class SuperTicTacToePanel extends JPanel {
             return;
         }
     }
-
-
-
-    /** This method is merely a test. Can be deleted out of the final code **/
-    private void wholeBoardCheck() {
-        for (int Row = 0; Row < numRowsCols; Row++) {
-            for (int Col = 0; Col < numRowsCols; Col++) {
-                checkGameState(Row,Col);
-            }
-        }
-    }
-
 }
 
