@@ -11,7 +11,7 @@ public class SuperTicTacToe {
         SuperTicTacToePanel panel = new SuperTicTacToePanel();
         frame.getContentPane().add(panel);
 
-        frame.setSize(700, 500);
+        frame.setSize(1000, 1000);
         frame.setVisible(true);
     }
 
