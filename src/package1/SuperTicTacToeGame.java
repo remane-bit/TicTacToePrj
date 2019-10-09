@@ -82,7 +82,7 @@ public class SuperTicTacToeGame {
     }
 
     public GameStatus checkForX(int row, int col) {
-        boolean checkWinner = true;
+        boolean checkWinner = false;
 
         int rowCounter = 0;
         int maxRowCounter = 0;
@@ -96,8 +96,8 @@ public class SuperTicTacToeGame {
                 }
                 rowCounter = 0;
             }
-            if (rowCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxRowCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
 
@@ -113,8 +113,8 @@ public class SuperTicTacToeGame {
                 }
                 colCounter = 0;
             }
-            if (colCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxColCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
 
@@ -130,8 +130,8 @@ public class SuperTicTacToeGame {
                 }
                 diagCounter = 0;
             }
-            if (diagCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxDiagCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
 
@@ -147,8 +147,8 @@ public class SuperTicTacToeGame {
                 }
                 revCounter = 0;
             }
-            if (revCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxRevCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
         if (checkWinner) {
@@ -158,7 +158,7 @@ public class SuperTicTacToeGame {
     }
 
     public GameStatus checkForO(int row, int col) {
-        boolean checkWinner = true;
+        boolean checkWinner = false;
 
         int rowCounter = 0;
         int maxRowCounter = 0;
@@ -172,8 +172,8 @@ public class SuperTicTacToeGame {
                 }
                 rowCounter = 0;
             }
-            if (rowCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxRowCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
 
@@ -189,8 +189,8 @@ public class SuperTicTacToeGame {
                 }
                 colCounter = 0;
             }
-            if (colCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxColCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
 
@@ -206,8 +206,8 @@ public class SuperTicTacToeGame {
                 }
                 diagCounter = 0;
             }
-            if (diagCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxDiagCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
 
@@ -223,8 +223,8 @@ public class SuperTicTacToeGame {
                 }
                 revCounter = 0;
             }
-            if (revCounter < getConnectionsToWin()) {
-                checkWinner = false;
+            if (maxRevCounter >= getConnectionsToWin()) {
+                checkWinner = true;
             }
         }
         if (checkWinner) {
@@ -266,6 +266,101 @@ public class SuperTicTacToeGame {
 
 
     public void randomAI() {
+
+        int row = 0;
+        int col = 0;
+
+        //checks for opponent about to win through connections in a row and stops it
+        int rowCounter = 0;
+        int maxRowCounter = 0;
+        for (int i = 0; i < numberOfRowsCols - 1; i++) {
+            if (board[row][i] == Cell.X) {
+                rowCounter++;
+            } else {
+                if (rowCounter > maxRowCounter) {
+                    maxRowCounter = rowCounter;
+                }
+                rowCounter = 0;
+            }
+            if (maxRowCounter + 1 == getConnectionsToWin() && board[row][i - maxRowCounter] == Cell.EMPTY) {
+                select(row, i - rowCounter);
+                break;
+            }
+            if (maxRowCounter + 1 == getConnectionsToWin() && board[row][i + 1] == Cell.EMPTY) {
+                select(row, i + 1);
+                break;
+            }
+        }
+
+        //checks for opponent about to win through connections in a col and stops it
+        int colCounter = 0;
+        int maxColCounter = 0;
+        //checking for winner in column
+        for (int i = 0; i < numberOfRowsCols - 1; i++) {
+            if (board[i][col] == Cell.O) {
+                colCounter++;
+            } else {
+                if (colCounter > maxColCounter) {
+                    maxColCounter = colCounter;
+                }
+                colCounter = 0;
+            }
+            if (maxColCounter + 1 == getConnectionsToWin() && board[i - maxColCounter][col] == Cell.EMPTY) {
+                select(i - colCounter, col);
+                break;
+            }
+            if (maxColCounter + 1 == getConnectionsToWin() && board[i + 1][col] == Cell.EMPTY) {
+                select(i + 1, col);
+                break;
+            }
+        }
+
+        //checks for opponent about to win through connections in a diag and stops it
+        int diagCounter = 0;
+        int maxDiagCounter = 0;
+        //checking for winner in diagonal
+        for (int i = 0; i < numberOfRowsCols - 1; i++) {
+            if (board[i][numberOfRowsCols - i - 1] == Cell.O) {
+                diagCounter++;
+            } else {
+                if (diagCounter > maxDiagCounter) {
+                    maxDiagCounter = diagCounter;
+                }
+                diagCounter = 0;
+            }
+            if (maxDiagCounter + 1 == getConnectionsToWin() && board[i - maxDiagCounter][numberOfRowsCols - i - maxDiagCounter - 1] == Cell.EMPTY) {
+                select(i - maxDiagCounter,numberOfRowsCols - i - maxDiagCounter - 1 );
+                break;
+            }
+            if (maxDiagCounter + 1 == getConnectionsToWin() && board[i + 1][numberOfRowsCols - i] == Cell.EMPTY) {
+                select(i + 1,numberOfRowsCols - i);
+                break;
+            }
+        }
+
+        //checks for opponent about to win through connections in a reverse diag and stops it
+        int revCounter = 0;
+        int maxRevCounter = 0;
+        //checking for winner in diagonal
+        for (int i = 0; i < numberOfRowsCols - 1; i++) {
+            if (board[i][i] == Cell.O) {
+                revCounter++;
+            } else {
+                if (revCounter > maxRevCounter) {
+                    maxRevCounter = revCounter;
+                }
+                revCounter = 0;
+            }
+            if (maxRevCounter + 1 == getConnectionsToWin() && board[i - maxRevCounter][i - maxRevCounter] == Cell.EMPTY) {
+                select(i - maxRevCounter, i - maxRevCounter);
+                break;
+            }
+            if (maxRevCounter + 1 == getConnectionsToWin() && board[i + 1][i + 1] == Cell.EMPTY) {
+                select(i + 1, i + 1);
+                break;
+            }
+        }
+
         Random rand = new Random();
         int randVal1 = rand.nextInt(numberOfRowsCols);
         int randVal2 = rand.nextInt(numberOfRowsCols);
@@ -277,6 +372,7 @@ public class SuperTicTacToeGame {
 
             if (board[randVal1][randVal2] == Cell.EMPTY) {
                 select(randVal1, randVal2);
+                break;
             }
 
             else {
