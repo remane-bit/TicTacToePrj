@@ -3,7 +3,6 @@ package package1;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
-import java.lang.Math;
 
 public class SuperTicTacToeGame {
     public Cell[][] board;
@@ -15,10 +14,17 @@ public class SuperTicTacToeGame {
 
     private ArrayList<Point> pastMoves = new ArrayList<Point>();
 
+    /************************************************************
+     * Default constructor for the SuperTicTacToeGame
+     ************************************************************/
     public SuperTicTacToeGame() {
         newGame();
     }
 
+    /**************************************************************
+     * This method sets the boad up to have all the cells be empty.
+     * The current turn is zero until somebody goes.
+     *************************************************************/
     public void newGame() {
         status = GameStatus.IN_PROGRESS;
         System.out.println("New game being made");
@@ -35,38 +41,72 @@ public class SuperTicTacToeGame {
         }
     }
 
+    /**************************************************************
+     * The amount of connections need to win getter
+     *************************************************************/
     public int getConnectionsToWin() {
         return connectionsToWin;
     }
 
+    /**************************************************************
+     * Game status setter
+     * @param status
+     *************************************************************/
     public void setStatus(GameStatus status) {
         this.status = status;
     }
 
+    /**************************************************************
+     * Game status getter
+     *************************************************************/
     public GameStatus getStatus() {
         return status;
     }
 
+    /**************************************************************
+     * The setter for who's current turn it is
+     * @param currentTurn
+     *************************************************************/
     public void setCurrentTurn(int currentTurn) {
         this.currentTurn = currentTurn;
     }
 
+    /**************************************************************
+     * The getter for who's current turn it is
+     *************************************************************/
     public int getCurrentTurn() {
         return currentTurn;
     }
 
+    /**************************************************************
+     * The number of connections to win setter
+     * @param connectionsToWin
+     *************************************************************/
     public void setConnectionsToWin(int connectionsToWin) {
         this.connectionsToWin = connectionsToWin;
     }
 
+    /**************************************************************
+     * Who starts first setter
+     * @param startsFirst
+     *************************************************************/
     public void setStartsFirst(String startsFirst) {
         this.startsFirst = startsFirst;
     }
 
+    /**************************************************************
+     * Number of rows and columns setter
+     * @param numberOfRowsCols
+     *************************************************************/
     public void setNumberOfRowsCols(int numberOfRowsCols) {
         this.numberOfRowsCols = numberOfRowsCols;
     }
 
+    /**************************************************************
+     * This method determines who's turn it is.
+     * @param row
+     * @param col
+     *************************************************************/
     public void select(int row, int col) {
 
         char first = startsFirst.charAt(0);
@@ -92,10 +132,14 @@ public class SuperTicTacToeGame {
         }
     }
 
-    public void reset() {
-        newGame();
-    }
-
+    /**************************************************************
+     * This method checks to see if the user has won. This is
+     * used after each turn.
+     * @param row
+     * @param col
+     * @return GameStatus.X_WON
+     * @return GameStatus.IN_PROGRESS
+     *************************************************************/
     public GameStatus checkForX(int row, int col) {
         boolean checkWinner = false;
 
@@ -149,6 +193,14 @@ public class SuperTicTacToeGame {
         return GameStatus.IN_PROGRESS;
     }
 
+    /**************************************************************
+     * This method checks to see if the computer has won. This is
+     * used after each turn.
+     * @param row
+     * @param col
+     * @return GameStatus.O_WON
+     * @return GameStatus.IN_PROGRESS
+     *************************************************************/
     public GameStatus checkForO(int row, int col) {
         boolean checkWinner = false;
 
@@ -202,10 +254,22 @@ public class SuperTicTacToeGame {
         return GameStatus.IN_PROGRESS;
     }
 
+    /**************************************************************
+     * Cell[][] getter
+     * @return board
+     *************************************************************/
     public Cell[][] getBoard() {
         return board;
     }
 
+    /**************************************************************
+     * This method checks to see if there is no clear winner. If
+     * there isn't, the game status is changed to cats game.
+     * @param row
+     * @param col
+     * @return GameStatus.IN_PROGRESS
+     * @return GameStatus.CATS
+     *************************************************************/
     public GameStatus checkForCats(int row, int col) {
         for (row = 0; row < numberOfRowsCols; row++)
             for (col = 0; col < numberOfRowsCols; col++)
@@ -214,14 +278,20 @@ public class SuperTicTacToeGame {
                 }
         return GameStatus.CATS;
     }
-
-    // takes most recent move and adds it to the arrayList of points
+    /**************************************************************
+     * This methodd takes most recent move and adds it to
+     * the arrayList of points
+     * @param row
+     * @param col
+     *************************************************************/
     public void updatePastMoves(int row, int col) {
         Point lastMovePoint = new Point(row,col);
         pastMoves.add(lastMovePoint);
     }
 
-    //removes the latest move from the board
+    /**************************************************************
+     * This method removes the latest move from the board
+     *************************************************************/
     public void undoPastMove() {
         //checks if array is empty before removing any of the elements
         if (pastMoves.size() != 0) {
@@ -237,6 +307,9 @@ public class SuperTicTacToeGame {
     }
 
 
+    /**************************************************************
+     *
+     *************************************************************/
     public void randomAI() {
 
         for (int row = 0; row < numberOfRowsCols; row++) {
