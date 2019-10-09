@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class SuperTicTacToeGame {
-    private Cell[][] board;
+    public Cell[][] board;
     private GameStatus status;
     private int currentTurn;
     private int numberOfRowsCols;
@@ -19,18 +19,18 @@ public class SuperTicTacToeGame {
 
     public void newGame() {
         status = GameStatus.IN_PROGRESS;
-
+        System.out.println("New game being made");
         currentTurn = 0;
+
+        System.out.println("Num Rows & Cols: " + numberOfRowsCols);
 
         board = new Cell[numberOfRowsCols][numberOfRowsCols];
 
-        for (int row = 0; row < numberOfRowsCols; row++)
-            for (int col = 0; col < numberOfRowsCols; col++)
+        for (int row = 0; row < numberOfRowsCols; row++) {
+            for (int col = 0; col < numberOfRowsCols; col++) {
                 board[row][col] = Cell.EMPTY;
-    }
-
-    public void setNumberOfConnections(int connectionsToWin) {
-        this.connectionsToWin = connectionsToWin;
+            }
+        }
     }
 
     public int getConnectionsToWin() {

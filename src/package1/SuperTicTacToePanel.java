@@ -6,12 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-public class SuperTicTacToePanel extends JPanel implements ActionListener{
+public class SuperTicTacToePanel extends JPanel {
 
     /** Game object **/
     private SuperTicTacToeGame game;
 
-    private JButton[][] board = new JButton[15][15];
+    private JButton[][] Jboard = new JButton[15][15];
     private Cell[][] iBoard;
     private JButton quitButton;
     private ImageIcon xIcon;
@@ -93,51 +93,22 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
 
         } while(failureFlag);
 
-
+        game.setNumberOfRowsCols(numRowsCols);
+        game.setConnectionsToWin(numToWin);
+        game.setStartsFirst(whosFirst);
+        game.newGame();
         setupGUI();
     }
 
-    public void actionPerformed(ActionEvent e) {
-
-        Object source = e.getSource();
-
-        if(source == quitButton) {
-            System.exit(1);
-        }
-    }
 
     /***********************************************************************
      * This method will set up all the buttons on the GUI
      **********************************************************************/
     public void setupGUI() {
 
-        /** Sets the manager for how components are going to be displayed **/
-        setLayout(new GridBagLayout());
-
-        /** Sets the components to be laid out like a grid **/
-        GridBagConstraints position = new GridBagConstraints();
-
-        /** Makes all components fill the entire cell in a GridBagLayout **/
-        position.fill = GridBagConstraints.HORIZONTAL;
-
-        ButtonGroup group = new ButtonGroup();
-
-        /** Board buttons. Letters rep. column position, numbers rep. row position **/
-
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 3; col++) {
-                System.out.println(row + " " + col);
-
-                board[row][col] = new JButton("");
-                board[row][col].setPreferredSize(new Dimension(100,100));
-                group.add(board[row][col]);
-                position.gridx = row;
-                position.gridy = col;
-                add(board[row][col], position);
-               // board[row][col].addActionListener(game);
-
-            }
-        }
+        //game.newGame();
+        System.out.println("New game created");
+        displayBoard();
 
        // quitButton = new JButton("Quit");
        //quitButton.addActionListener(this);
@@ -166,6 +137,72 @@ public class SuperTicTacToePanel extends JPanel implements ActionListener{
         }
     }
 
+
+    private class ButtonListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+
+            Object source = e.getSource();
+
+            if(source == quitButton) {
+                System.exit(1);
+            }
+
+
+
+
+            /** If any of the tic tac toe buttons are selected, do the following **/
+            for (int Row = 0; Row < 3; Row++) {
+                for(int Col = 0; Col < 3; Col++) {
+                    if (Jboard[Row][Col] == source) {
+                        System.out.println("You clicked at " + Row + "," + Col);
+                        game.select(Row,Col);
+                        System.out.println("There is now an X at " + Row + "," + Col);
+                        //Make the x appear on the GUI
+                        Jboard[Row][Col].setText("X");
+
+                    }
+                }
+            }
+
+           // if(source == board[row][col]) {            }
+        }
+
+    }
+
+    private  void displayBoard() {
+        /** Sets the manager for how components are going to be displayed **/
+        setLayout(new GridBagLayout());
+
+        /** Sets the components to be laid out like a grid **/
+        GridBagConstraints position = new GridBagConstraints();
+
+        /** Makes all components fill the entire cell in a GridBagLayout **/
+        position.fill = GridBagConstraints.HORIZONTAL;
+
+        ButtonListener set = new ButtonListener();
+
+        ButtonGroup group = new ButtonGroup();
+
+        /** Board buttons. Letters rep. column position, numbers rep. row position **/
+
+        for(int row = 0; row < 3; row++) {
+            for(int col = 0; col < 3; col++) {
+                //System.out.println(row + " " + col);
+
+                Font f = new Font("Dialog", Font.PLAIN, 72);
+                Jboard[row][col] = new JButton("");
+                Jboard[row][col].setPreferredSize(new Dimension(100,100));
+                group.add(Jboard[row][col]);
+                position.gridx = row;
+                position.gridy = col;
+                add(Jboard[row][col], position);
+                Jboard[row][col].addActionListener(set);
+                Jboard[row][col].setFont(f);
+
+            }
+        }
+    }
 
 }
 
