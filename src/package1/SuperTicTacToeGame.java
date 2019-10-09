@@ -100,21 +100,21 @@ public class SuperTicTacToeGame {
         boolean checkWinner = false;
 
         // check for row win
-        int colCounter = 0;
+        int rowCounter = 0;
         for(int i = 0; i < numberOfRowsCols; i++){
             if(board[row][i] == Cell.X)
-                colCounter++;
-            if(colCounter == connectionsToWin){
+                rowCounter++;
+            if(rowCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
 
         //check for col win
-        int rowCounter = 0;
+        int colCounter = 0;
         for(int i = 0; i < numberOfRowsCols; i++){
             if(board[i][col] == Cell.X)
-                rowCounter++;
-            if(rowCounter == connectionsToWin){
+                colCounter++;
+            if(colCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
@@ -238,6 +238,20 @@ public class SuperTicTacToeGame {
 
 
     public void randomAI() {
+
+        for (int row = 0; row < numberOfRowsCols; row++) {
+            for (int col = 0; col < numberOfRowsCols; col++) {
+
+                int colCounter = 0;
+                for(int i = 0; i < numberOfRowsCols; i++){
+                    if(board[row][i] == Cell.O)
+                        colCounter++;
+                    if(colCounter == connectionsToWin){
+                        //checkWinner = true;
+                    }
+                }
+            }
+        }
 
         Random rand = new Random();
         int randVal1 = rand.nextInt(numberOfRowsCols);
