@@ -84,73 +84,50 @@ public class SuperTicTacToeGame {
     public GameStatus checkForX(int row, int col) {
         boolean checkWinner = false;
 
+        //check for row win
         int rowCounter = 0;
-        int maxRowCounter = 0;
-        //checking for winner in row
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[row][i] == Cell.X) {
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[i][col] == Cell.X)
                 rowCounter++;
-            } else {
-                if (rowCounter > maxRowCounter) {
-                    maxRowCounter = rowCounter;
-                }
-                rowCounter = 0;
-            }
-            if (maxRowCounter >= getConnectionsToWin()) {
+            if(rowCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
 
+        // check for col win
         int colCounter = 0;
-        int maxColCounter = 0;
-        //checking for winner in column
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[i][col] == Cell.X) {
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[row][i] == Cell.X)
                 colCounter++;
-            } else {
-                if (colCounter > maxColCounter) {
-                    maxColCounter = colCounter;
-                }
-                colCounter = 0;
-            }
-            if (maxColCounter >= getConnectionsToWin()) {
+            if(colCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
 
+        //check for a diagonal win
         int diagCounter = 0;
-        int maxDiagCounter = 0;
-        //checking for winner in diagonal
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[i][numberOfRowsCols - i - 1] == Cell.X) {
-                diagCounter++;
-            } else {
-                if (diagCounter > maxDiagCounter) {
-                    maxDiagCounter = diagCounter;
+        if(row == col){
+            for(int i = 0; i < numberOfRowsCols; i++){
+                if(board[i][i] == Cell.X)
+                    diagCounter++;
+                if(diagCounter == connectionsToWin){
+                    checkWinner = true;
                 }
-                diagCounter = 0;
-            }
-            if (maxDiagCounter >= getConnectionsToWin()) {
-                checkWinner = true;
             }
         }
 
-        int revCounter = 0;
-        int maxRevCounter = 0;
-        //checking for winner in diagonal
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[i][i] == Cell.X) {
-                revCounter++;
-            } else {
-                if (revCounter > maxRevCounter) {
-                    maxRevCounter = revCounter;
+        //check for a reverse diagonal win
+        int revDiagCounter = 0;
+        if(row + col == numberOfRowsCols - 1){
+            for(int i = 0; i < numberOfRowsCols; i++){
+                if(board[i][(numberOfRowsCols - 1) - i] == Cell.X)
+                    revDiagCounter++;
+                if(revDiagCounter == connectionsToWin){
+                    checkWinner = true;
                 }
-                revCounter = 0;
-            }
-            if (maxRevCounter >= getConnectionsToWin()) {
-                checkWinner = true;
             }
         }
+
         if (checkWinner) {
             return GameStatus.X_WON;
         }
@@ -160,73 +137,50 @@ public class SuperTicTacToeGame {
     public GameStatus checkForO(int row, int col) {
         boolean checkWinner = false;
 
+        //check for row win
         int rowCounter = 0;
-        int maxRowCounter = 0;
-        //checking for winner in row
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[row][i] == Cell.O) {
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[i][col] == Cell.O)
                 rowCounter++;
-            } else {
-                if (rowCounter > maxRowCounter) {
-                    maxRowCounter = rowCounter;
-                }
-                rowCounter = 0;
-            }
-            if (maxRowCounter >= getConnectionsToWin()) {
+            if(rowCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
 
+        // check for col win
         int colCounter = 0;
-        int maxColCounter = 0;
-        //checking for winner in column
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[i][col] == Cell.O) {
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[row][i] == Cell.O)
                 colCounter++;
-            } else {
-                if (colCounter > maxColCounter) {
-                    maxColCounter = colCounter;
-                }
-                colCounter = 0;
-            }
-            if (maxColCounter >= getConnectionsToWin()) {
+            if(colCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
 
+        //check for a diagonal win
         int diagCounter = 0;
-        int maxDiagCounter = 0;
-        //checking for winner in diagonal
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[i][numberOfRowsCols - i - 1] == Cell.O) {
-                diagCounter++;
-            } else {
-                if (diagCounter > maxDiagCounter) {
-                    maxDiagCounter = diagCounter;
+        if(row == col){
+            for(int i = 0; i < numberOfRowsCols; i++){
+                if(board[i][i] == Cell.O)
+                    diagCounter++;
+                if(diagCounter == connectionsToWin){
+                    checkWinner = true;
                 }
-                diagCounter = 0;
-            }
-            if (maxDiagCounter >= getConnectionsToWin()) {
-                checkWinner = true;
             }
         }
 
-        int revCounter = 0;
-        int maxRevCounter = 0;
-        //checking for winner in diagonal
-        for (int i = 0; i < numberOfRowsCols - 1; i++) {
-            if (board[i][i] == Cell.O) {
-                revCounter++;
-            } else {
-                if (revCounter > maxRevCounter) {
-                    maxRevCounter = revCounter;
+        //check for a reverse diagonal win
+        int revDiagCounter = 0;
+        if(row + col == numberOfRowsCols - 1){
+            for(int i = 0; i < numberOfRowsCols; i++){
+                if(board[i][(numberOfRowsCols - 1) - i] == Cell.O)
+                    revDiagCounter++;
+                if(revDiagCounter == connectionsToWin){
+                    checkWinner = true;
                 }
-                revCounter = 0;
-            }
-            if (maxRevCounter >= getConnectionsToWin()) {
-                checkWinner = true;
             }
         }
+
         if (checkWinner) {
             return GameStatus.O_WON;
         }
