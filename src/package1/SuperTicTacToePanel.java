@@ -179,6 +179,12 @@ public class SuperTicTacToePanel extends JPanel {
 
             }
         }
+
+        char First = whosFirst.charAt(0);
+        if(First == 'O' || First == 'o') {
+            setBoardLocked();
+        }
+
     }
 
 
@@ -211,9 +217,19 @@ public class SuperTicTacToePanel extends JPanel {
             }
 
             if(source == resetButton) {
-                game.newGame();
-                reEnableEmpty();
-                AIturnButton.setEnabled(false);
+                char First = whosFirst.charAt(0);
+                if(First == 'X' || First == 'x'){
+                    game.newGame();
+                    reEnableEmpty();
+                    AIturnButton.setEnabled(false);
+                }
+
+                else if (First == 'O' || First == 'o') {
+                    game.newGame();
+                    reEnableEmpty();
+                    AIturnButton.setEnabled(true);
+                    setBoardLocked();
+                }
             }
 
             /** If any of the tic tac toe buttons are selected, do the following **/
@@ -224,10 +240,10 @@ public class SuperTicTacToePanel extends JPanel {
                         game.select(Row,Col);
                         game.updatePastMoves(Row, Col);
 
-                        checkGameState(Row, Col);
-
                         updateBoard();
                        // System.out.println("There is now an X at " + Row + "," + Col);
+                        checkGameState(Row, Col);
+                        setBoardLocked();
                         Jboard[Row][Col].setEnabled(false);
                         AIturnButton.setEnabled(true);
                     }
@@ -309,6 +325,15 @@ public class SuperTicTacToePanel extends JPanel {
                     Jboard[Row][Col].setEnabled(true);
                 }
 
+            }
+        }
+    }
+
+    private void setBoardLocked() {
+        iBoard = game.getBoard();
+        for (int Row = 0; Row < numRowsCols; Row++) {
+            for (int Col = 0; Col < numRowsCols; Col++) {
+                Jboard[Row][Col].setEnabled(false);
             }
         }
     }
