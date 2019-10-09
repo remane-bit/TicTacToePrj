@@ -99,22 +99,22 @@ public class SuperTicTacToeGame {
     public GameStatus checkForX(int row, int col) {
         boolean checkWinner = false;
 
-        //check for row win
-        int rowCounter = 0;
-        for(int i = 0; i < numberOfRowsCols; i++){
-            if(board[i][col] == Cell.X)
-                rowCounter++;
-            if(rowCounter == connectionsToWin){
-                checkWinner = true;
-            }
-        }
-
-        // check for col win
+        // check for row win
         int colCounter = 0;
         for(int i = 0; i < numberOfRowsCols; i++){
             if(board[row][i] == Cell.X)
                 colCounter++;
             if(colCounter == connectionsToWin){
+                checkWinner = true;
+            }
+        }
+
+        //check for col win
+        int rowCounter = 0;
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[i][col] == Cell.X)
+                rowCounter++;
+            if(rowCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
@@ -152,22 +152,22 @@ public class SuperTicTacToeGame {
     public GameStatus checkForO(int row, int col) {
         boolean checkWinner = false;
 
-        //check for row win
-        int rowCounter = 0;
-        for(int i = 0; i < numberOfRowsCols; i++){
-            if(board[i][col] == Cell.O)
-                rowCounter++;
-            if(rowCounter == connectionsToWin){
-                checkWinner = true;
-            }
-        }
-
-        // check for col win
+        // check for row win
         int colCounter = 0;
         for(int i = 0; i < numberOfRowsCols; i++){
             if(board[row][i] == Cell.O)
                 colCounter++;
             if(colCounter == connectionsToWin){
+                checkWinner = true;
+            }
+        }
+
+        //check for col win
+        int rowCounter = 0;
+        for(int i = 0; i < numberOfRowsCols; i++){
+            if(board[i][col] == Cell.O)
+                rowCounter++;
+            if(rowCounter == connectionsToWin){
                 checkWinner = true;
             }
         }
