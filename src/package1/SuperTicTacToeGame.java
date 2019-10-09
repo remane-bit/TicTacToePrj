@@ -208,14 +208,17 @@ public class SuperTicTacToeGame {
 
     //removes the latest move from the board
     public void undoPastMove() {
-        //gets last element in array and makes a point of it
-        Point latestMove = pastMoves.get(pastMoves.size() - 1);
+        //checks if array is empty before removing any of the elements
+        if (pastMoves.size() != 0) {
+            //gets last element in array and makes a point of it
+            Point latestMove = pastMoves.get(pastMoves.size() - 1);
 
-        //sets board position of point to empty
-        board[latestMove.x][latestMove.y] = Cell.EMPTY;
+            //sets board position of point to empty
+            board[latestMove.x][latestMove.y] = Cell.EMPTY;
 
-        //removes the element from the array
-        pastMoves.remove(pastMoves.size() - 1);
+            //removes the element from the array
+            pastMoves.remove(pastMoves.size() - 1);
+        }
     }
 
 
