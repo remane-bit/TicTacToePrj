@@ -201,9 +201,7 @@ public class SuperTicTacToePanel extends JPanel {
             /** Once the user selects a position on the board, press the AI's turn button to continue the game at your
              * own pace **/
             if(source == AIturnButton) {
-               // game.randomAI();
-               /*** TOGGLE BETWEEN RAND AND SMARTER AI ***/
-                game.smarterAI();
+                game.bestAI();
                 updateBoard();
                 reEnableEmpty();
                 AIturnButton.setEnabled(false);
@@ -238,7 +236,7 @@ public class SuperTicTacToePanel extends JPanel {
                 }
             }
 
-            /** If any of the tic tac toe buttons are selected, do the following **/
+            // If any of the tic tac toe buttons are selected, do the following *
             for (int Row = 0; Row < numRowsCols; Row++) {
                 for(int Col = 0; Col < numRowsCols; Col++) {
                     if (Jboard[Row][Col] == source) {
@@ -350,22 +348,22 @@ public class SuperTicTacToePanel extends JPanel {
      * with the according message.
      **************************************************************************/
     private void checkGameState(int row, int col) {
-        //System.out.println("Checking for X winner");
-        if(game.checkForX(row, col) == GameStatus.X_WON) {
-            JOptionPane.showMessageDialog(null, "X won the game!");
-            AIturnButton.setEnabled(false);
-            return;
-        }
-
-       // System.out.println("Checking for O winner");
-        if(game.checkForO(row, col) == GameStatus.O_WON) {
+        System.out.println("Checking for O winner");
+        if(game.checkPlayerWin(Cell.O)) {
             JOptionPane.showMessageDialog(null, "The AI won the game!");
             setBoardLocked();
             return;
         }
 
-        //System.out.println("Checking for tie game");
-        if(game.checkForCats(row,col) == GameStatus.CATS) {
+        System.out.println("Checking for X winner");
+        if(game.checkPlayerWin(Cell.X)) {
+            JOptionPane.showMessageDialog(null, "X won the game!");
+            AIturnButton.setEnabled(false);
+            return;
+        }
+
+        System.out.println("Checking for tie game");
+        if(game.checkForCats() == GameStatus.CATS) {
             JOptionPane.showMessageDialog(null, "Tie game!");
             return;
         }

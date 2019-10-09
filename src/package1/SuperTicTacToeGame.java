@@ -178,7 +178,7 @@ public class SuperTicTacToeGame {
 
         char first = startsFirst.charAt(0);
 
-        if (first == 'X' || first == 'x') {
+        if(first == 'X' || first == 'x') {
             if (currentTurn % 2 == 0) {
                 board[row][col] = Cell.X;
                 currentTurn++;
@@ -186,7 +186,9 @@ public class SuperTicTacToeGame {
                 board[row][col] = Cell.O;
                 currentTurn++;
             }
-        } else if (first == 'O' || first == 'o') {
+        }
+
+        else if(first == 'O' || first == 'o') {
             if (currentTurn % 2 == 1) {
                 board[row][col] = Cell.X;
                 currentTurn++;
@@ -197,129 +199,201 @@ public class SuperTicTacToeGame {
         }
     }
 
-    /**************************************************************
-     * This method checks to see if the user has won. This is
-     * used after each turn.
-     * @param row
-     * @param col
-     * @return GameStatus.X_WON
-     * @return GameStatus.IN_PROGRESS
-     *************************************************************/
-    public GameStatus checkForX(int row, int col) {
-        boolean checkWinner = false;
+    private boolean validRowCol(int row, int col) {
+        return row >= 0 && row < numberOfRowsCols && col >= 0 && col < numberOfRowsCols;
+    }
 
-        // check for row win
-        int rowCounter = 0;
-        for (int i = 0; i < numberOfRowsCols; i++) {
-            if (board[row][i] == Cell.X)
-                rowCounter++;
-            if (rowCounter == connectionsToWin) {
-                checkWinner = true;
-            }
-        }
+    private GameStatus checkGameStatus(Cell player, int row, int col, int count, int rowIncrement, int colIncrement) {
+        if (validRowCol(row, col)) {
+            if (board[row][col] == player) {
+                count++;
+                if (count >= connectionsToWin) {
+                    if (player == Cell.O) {
+                        return GameStatus.O_WON;
+                    }
 
-        //check for col win
-        int colCounter = 0;
-        for (int i = 0; i < numberOfRowsCols; i++) {
-            if (board[i][col] == Cell.X)
-                colCounter++;
-            if (colCounter == connectionsToWin) {
-                checkWinner = true;
-            }
-        }
-
-        //check for a diagonal win
-        int diagCounter = 0;
-        if (row == col) {
-            for (int i = 0; i < numberOfRowsCols; i++) {
-                if (board[i][i] == Cell.X)
-                    diagCounter++;
-                if (diagCounter == connectionsToWin) {
-                    checkWinner = true;
+                    return GameStatus.X_WON;
                 }
-            }
-        }
 
-        //check for a reverse diagonal win
-        int revDiagCounter = 0;
-        if (row + col == numberOfRowsCols - 1) {
-            for (int i = 0; i < numberOfRowsCols; i++) {
-                if (board[i][(numberOfRowsCols - 1) - i] == Cell.X)
-                    revDiagCounter++;
-                if (revDiagCounter == connectionsToWin) {
-                    checkWinner = true;
-                }
+                return checkGameStatus(player, row + rowIncrement, col + colIncrement, count, rowIncrement, colIncrement);
             }
-        }
-
-        if (checkWinner) {
-            return GameStatus.X_WON;
         }
         return GameStatus.IN_PROGRESS;
     }
 
+    private boolean checkPlayerGameWin(Cell player, int row, int col, int rowIncrement, int colIncrement) {
+        GameStatus status = checkGameStatus(player, row, col, 0, rowIncrement, colIncrement);
+        return status == GameStatus.X_WON || status == GameStatus.O_WON;
+    }
+
+    private boolean checkPlayerRowWin(Cell player, int row, int col) {
+        return checkPlayerGameWin(player, row, col, 1, 0);
+    }
+
+    private boolean checkPlayerColumnWin(Cell player, int row, int col) {
+        return checkPlayerGameWin(player, row, col,  0, 1);
+    }
+
+    private boolean checkPlayerDiagonalWin(Cell player, int row, int col) {
+        return checkPlayerGameWin(player, row, col,  1, 1) ||
+                checkPlayerGameWin(player, row, col,  -1, -1);
+    }
+
+    public boolean checkPlayerWin(Cell player) {
+        for (int row = 0; row < numberOfRowsCols; row++) {
+            for (int col = 0; col < numberOfRowsCols; col++) {
+                if (checkPlayerRowWin(player, row, col) ||
+                        checkPlayerColumnWin(player, row, col) ||
+                        checkPlayerDiagonalWin(player, row, col) ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean areAnyMovesLeft() {
+        for (int row = 0; row < numberOfRowsCols; row++) {
+            for (int col = 0; col < numberOfRowsCols; col++) {
+                if (board[row][col] == Cell.EMPTY)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Cell getOppositePlayer(Cell player) {
+        Cell oppositePlayer;
+        if (player == Cell.O) {
+            oppositePlayer = Cell.X;
+        } else {
+            oppositePlayer = Cell.O;
+        }
+        return oppositePlayer;
+    }
+
+    private int minimax(Cell player) {
+        if (checkPlayerWin(Cell.O)) {
+            return 10;
+        } else if (checkPlayerWin(Cell.X)) {
+            return -10;
+        }
+
+        // Check if game is over.
+        if (!areAnyMovesLeft())
+            return 0;
+
+        if (player == Cell.X) {
+            // Player's turn.
+            int bestVal = -1000;
+            for(int i = 0; i < numberOfRowsCols; i++) {
+                for (int j = 0; j < numberOfRowsCols; j++) {
+                    // Skip used.
+                    if (board[i][j] != Cell.EMPTY)
+                        continue;
+
+                    // Temporarily set cell to emulate move.
+                    board[i][j] = player;
+                    // Run minimax algorithm recursively.
+                    int value = minimax(Cell.O);
+                    // Restore to empty cell again.
+                    board[i][j] = Cell.EMPTY;
+
+                    if (value > bestVal) {
+                        bestVal = value;
+                    }
+                }
+            }
+            return bestVal;
+        } else {
+            // AI's turn.
+            int bestVal = 1000;
+            for(int i = 0; i < numberOfRowsCols; i++) {
+                for (int j = 0; j < numberOfRowsCols; j++) {
+                    // Skip used.
+                    if (board[i][j] != Cell.EMPTY)
+                        continue;
+                    // Temporarily set cell to emulate move.
+                    board[i][j] = player;
+                    // Run minimax algorithm recursively.
+                    int value = minimax(Cell.X);
+                    // Restore to empty cell again.
+                    board[i][j] = Cell.EMPTY;
+
+                    if (value < bestVal) {
+                        bestVal = value;
+                    }
+                }
+            }
+            return bestVal;
+        }
+    }
+
+    public Point determineBestMoveForX() {
+        int bestVal = -1000;
+        Point bestMove = new Point(-1, -1);
+
+        for (int row = 0; row < numberOfRowsCols; row++) {
+            for (int col = 0; col < numberOfRowsCols; col++) {
+                // Skip used move.
+                if (board[row][col] != Cell.EMPTY)
+                    continue;
+
+                // Emulate the move.
+                board[row][col] = Cell.X;
+                int moveVal = minimax(Cell.X);
+                board[row][col] = Cell.EMPTY;
+
+                // If the value of the current move is more than the best value, then update best.
+                if (moveVal > bestVal) {
+                    bestMove.x = row;
+                    bestMove.y = col;
+                    bestVal = moveVal;
+                }
+            }
+        }
+
+        return bestMove;
+    }
+
+    public Point determineBestMoveForO() {
+        int bestVal = 1000;
+        Point bestMove = new Point(-1, -1);
+
+        for (int row = 0; row < numberOfRowsCols; row++) {
+            for (int col = 0; col < numberOfRowsCols; col++) {
+                // Skip used move.
+                if (board[row][col] != Cell.EMPTY)
+                    continue;
+
+                // Emulate the move.
+                board[row][col] = Cell.O;
+                int moveVal = minimax(Cell.O);
+                board[row][col] = Cell.EMPTY;
+
+                // If the value of the current move is less than the best value, then update best.
+                if (moveVal < bestVal) {
+                    bestMove.x = row;
+                    bestMove.y = col;
+                    bestVal = moveVal;
+                }
+            }
+        }
+
+        return bestMove;
+    }
+
     /**************************************************************
-     * This method checks to see if the computer has won. This is
-     * used after each turn.
-     * @param row
-     * @param col
-     * @return GameStatus.O_WON
+     * This method checks to see if there is no clear winner. If
+     * there isn't, the game status is changed to cats game.
      * @return GameStatus.IN_PROGRESS
+     * @return GameStatus.CATS
      *************************************************************/
-    public GameStatus checkForO(int row, int col) {
-
-        boolean CheckWinner = false;
-
-        // check for row win
-        int RowCounter = 0;
-        for (int i = 0; i < numberOfRowsCols; i++) {
-            if (board[row][i] == Cell.O)
-                RowCounter++;
-            if (RowCounter == connectionsToWin) {
-                CheckWinner = true;
-            }
-        }
-
-        //check for col win
-        int ColCounter = 0;
-        for (int i = 0; i < numberOfRowsCols; i++) {
-            if (board[i][col] == Cell.O)
-                ColCounter++;
-            if (ColCounter == connectionsToWin) {
-                CheckWinner = true;
-            }
-        }
-
-        //check for a diagonal win
-        int DiagCounter = 0;
-        if (row == col) {
-            for (int i = 0; i < numberOfRowsCols; i++) {
-                if (board[i][i] == Cell.O)
-                    DiagCounter++;
-                if (DiagCounter == connectionsToWin) {
-                    CheckWinner = true;
-                }
-            }
-        }
-
-        //check for a reverse diagonal win
-        int RevDiagCounter = 0;
-        if (row + col == numberOfRowsCols - 1) {
-            for (int i = 0; i < numberOfRowsCols; i++) {
-                if (board[i][(numberOfRowsCols - 1) - i] == Cell.O)
-                    RevDiagCounter++;
-                if (RevDiagCounter == connectionsToWin) {
-                    CheckWinner = true;
-                }
-            }
-        }
-
-        if (CheckWinner) {
-            System.out.println("O WINS");
-            return GameStatus.O_WON;
-        }
-        return GameStatus.IN_PROGRESS;
-
+    public GameStatus checkForCats() {
+        if (areAnyMovesLeft())
+            return GameStatus.IN_PROGRESS;
+        return GameStatus.CATS;
     }
 
     /**************************************************************
@@ -331,30 +405,13 @@ public class SuperTicTacToeGame {
     }
 
     /**************************************************************
-     * This method checks to see if there is no clear winner. If
-     * there isn't, the game status is changed to cats game.
-     * @param row
-     * @param col
-     * @return GameStatus.IN_PROGRESS
-     * @return GameStatus.CATS
-     *************************************************************/
-    public GameStatus checkForCats(int row, int col) {
-        for (row = 0; row < numberOfRowsCols; row++)
-            for (col = 0; col < numberOfRowsCols; col++)
-                if (board[row][col] == Cell.EMPTY) {
-                    return GameStatus.IN_PROGRESS;
-                }
-        return GameStatus.CATS;
-    }
-
-    /**************************************************************
      * This methodd takes most recent move and adds it to
      * the arrayList of points
      * @param row
      * @param col
      *************************************************************/
     public void updatePastMoves(int row, int col) {
-        Point lastMovePoint = new Point(row, col);
+        Point lastMovePoint = new Point(row,col);
         pastMoves.add(lastMovePoint);
     }
 
@@ -379,22 +436,16 @@ public class SuperTicTacToeGame {
     /**************************************************************
      *
      *************************************************************/
+    public void bestAI() {
+        // Determine the best move.
+        Point bestMove = determineBestMoveForO();
+        select(bestMove.x, bestMove.y);
+        updatePastMoves(bestMove.x, bestMove.y);
+        setAImoveX(bestMove.x);
+        setAImoveY(bestMove.y);
+    }
+
     public void randomAI() {
-
-        for (int row = 0; row < numberOfRowsCols; row++) {
-            for (int col = 0; col < numberOfRowsCols; col++) {
-
-                int colCounter = 0;
-                for (int i = 0; i < numberOfRowsCols; i++) {
-                    if (board[row][i] == Cell.O)
-                        colCounter++;
-                    if (colCounter == connectionsToWin) {
-                        //checkWinner = true;
-                    }
-                }
-            }
-        }
-
         Random rand = new Random();
         int randVal1 = rand.nextInt(numberOfRowsCols);
         int randVal2 = rand.nextInt(numberOfRowsCols);
@@ -407,13 +458,15 @@ public class SuperTicTacToeGame {
             if (board[randVal1][randVal2] == Cell.EMPTY) {
                 select(randVal1, randVal2);
                 break;
-            } else {
+            }
+
+            else {
                 failureFlag = true;
                 randVal1 = rand.nextInt(numberOfRowsCols);
                 randVal2 = rand.nextInt(numberOfRowsCols);
             }
 
-        } while (failureFlag);
+        } while(failureFlag);
 
         updatePastMoves(randVal1, randVal2);
         setAImoveX(randVal1);
@@ -422,208 +475,4 @@ public class SuperTicTacToeGame {
 
     }
 
-
-    public void smarterAI() {
-
-        boolean AttackMode = false;
-        boolean DefenedMode = false;
-        int AIxMove = 0;
-        int AIyMove = 0;
-        int xCounter = 0;
-        int yCounter = 0;
-        int OinaRow = 0;
-        int i = 0;
-
-        /** If its the AI's first move, go for a corner **/
-        if ((getCurrentTurn() == 0) || (getCurrentTurn() == 1)) {
-            //If the top left corner is empty, place an O there
-            if (board[0][0] == Cell.EMPTY) {
-                select(0, 0);
-                setAImoveX(0);
-                setAImoveY(0);
-                AIxMove = 0;
-                AIyMove = 0;
-            }
-            //If top right corner is taken, go for the bottom right instead
-            else if (board[numberOfRowsCols - 1][numberOfRowsCols - 1] == Cell.EMPTY) {
-                select(numberOfRowsCols - 1, numberOfRowsCols - 1);
-                setAImoveX(numberOfRowsCols - 1);
-                setAImoveY(numberOfRowsCols - 1);
-                AIxMove = numberOfRowsCols;
-                AIyMove = numberOfRowsCols;
-            }
-        }
-
-        //Now it should scan the board to see if the user can win in anyway. If the user can win,
-        // go into defend mode. Else attack mode.
-
-        else {
-
-            AttackMode = false;
-            DefenedMode = false;
-
-            System.out.println("AI is searching for spot");
-
-            for (int Row = 0; Row < numberOfRowsCols; Row++) {
-                for (int Col = 0; Col < numberOfRowsCols; Col++) {
-
-                    /** IF A CELL HAS AN X **/
-                    if ((board[Row][Col] == Cell.X) && (!DefenedMode)) {
-                        //Check the rows to around it, set the col = 0 then scan it. If xcounter == numtowin - 1, place O there
-                        i = Row;
-
-                        /** Checks the row for a streak of X's  **/
-                        for (int j = 0; j < numberOfRowsCols; j++) {
-                            if (board[i][j] == Cell.X) {
-                                xCounter++;
-                            } else {
-                                xCounter = 0;
-                            }
-
-                            if (xCounter == connectionsToWin - 1) {
-                                if (board[i][j + 1] == Cell.EMPTY) {
-                                    DefenedMode = true;
-                                    AIxMove = i;
-                                    AIyMove = j + 1;
-                                    break;
-                                } else if (board[i][j + 1] == Cell.O) {
-                                    xCounter = 0;
-                                }
-                            }
-                        }
-                        //Check the cols around it, set row = 0, then scan it. If xcounter == numtowin - 1, place O there
-
-                        i = Col;
-
-                        for (int j = 0; j < numberOfRowsCols; j++) {
-                            if (board[j][i] == Cell.X) {
-                                yCounter++;
-                            } else {
-                                yCounter = 0;
-                            }
-
-                            if (yCounter == connectionsToWin - 1) {
-                                if (board[j + 1][i] == Cell.EMPTY) {
-                                    DefenedMode = true;
-                                    AIxMove = i;
-                                    AIyMove = j + 1;
-                                    break;
-                                } else if (board[j + 1][i] == Cell.O) {
-                                    yCounter = 0;
-                                }
-                            }
-                        }
-                        //Check the diags if its in the diagonal range. Manually go from [0][0], [1][1], using i until i == numRowsCOls - 1
-                    }
-
-                    /** IF A CELL HAS AN O **/
-                    if ((board[Row][Col] == Cell.O) && (!DefenedMode)) {
-
-                        i = Row;
-
-                        /** Checks the row for a streak of X's  **/
-                        for (int j = 0; j < numberOfRowsCols; j++) {
-                            if (board[i][j] == Cell.O) {
-                                //If theres another O in the row, do this
-                                OinaRow++;
-
-                            } else if (board[i][j] == Cell.EMPTY) {
-                                System.out.println("Hi?");
-                                AttackMode = true;
-                                AIxMove = i;
-                                AIyMove = j;
-                                break;
-                            }
-
-                            if (OinaRow == connectionsToWin - 1) {
-                                AttackMode = true;
-                                AIxMove = i;
-                                AIyMove = j + 1;
-                            }
-
-
-                        }
-
-
-                    }
-
-
-                }
-            }
-
-
-                if (AttackMode) {
-                    System.out.println("Attacking");
-                    select(AIxMove, AIyMove);
-                }
-                else if (DefenedMode) {
-                    System.out.println("Defending");
-                    select(AIxMove, AIyMove);
-                }
-
-                /** If neither flag is activated, randomly put an O down **/
-                else {
-
-
-                    Random rand = new Random();
-                    int randVal1 = rand.nextInt(numberOfRowsCols);
-                    int randVal2 = rand.nextInt(numberOfRowsCols);
-                    boolean failureFlag;
-
-                    /** Loop will iterate until it finds an empty cell **/
-                    do {
-                        failureFlag = false;
-
-                        if (board[randVal1][randVal2] == Cell.EMPTY) {
-                            select(randVal1, randVal2);
-                            break;
-                        } else {
-                            failureFlag = true;
-                            randVal1 = rand.nextInt(numberOfRowsCols);
-                            randVal2 = rand.nextInt(numberOfRowsCols);
-                        }
-
-                    } while (failureFlag);
-
-
-                    updatePastMoves(randVal1, randVal2);
-                    setAImoveX(randVal1);
-                    setAImoveY(randVal2);
-                    select(randVal1, randVal2);
-                    System.out.println("The AI placed an O randomly at " + randVal1 + " " + randVal2);
-
-                }
-                AttackMode = false;
-                DefenedMode = false;
-
-
-            }
-
-            System.out.println("The AI placed an O at " + AIxMove + " " + AIyMove);
-        }
-
-
-
-    /* nested for loop that checks whats contained in all the cells
-     for (int Row = 0; Row < numberOfRowsCols; Row++) {
-                for (int Col = 0; Col < numberOfRowsCols; Col++) {
-                    if(board[Row][Col] == Cell.X) {
-                        //Check the entire board for Cells with X's
-                        ;
-                        }
-
-                    else if(board[Row][Col] == Cell.EMPTY) {
-                        //Check the entire board for Cells that are empty
-                        ;
-                    }
-
-                    else if(board[Row][Col] == Cell.O) {
-                        //Check the entire board for Cells with O's
-                        ;
-                    }
-                }
-            }
-     */
-
-    }
-
+}
