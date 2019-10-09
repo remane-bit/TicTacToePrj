@@ -11,7 +11,7 @@ public class SuperTicTacToePanel extends JPanel {
     /** Game object **/
     private SuperTicTacToeGame game;
 
-    private JButton[][] board = new JButton[15][15];
+    private JButton[][] Jboard = new JButton[15][15];
     private Cell[][] iBoard;
     private JButton quitButton;
     private ImageIcon xIcon;
@@ -93,7 +93,10 @@ public class SuperTicTacToePanel extends JPanel {
 
         } while(failureFlag);
 
-
+        game.setNumberOfRowsCols(numRowsCols);
+        game.setNumberOfConnections(numToWin);
+        game.setStartsFirst(whosFirst);
+        game.newGame();
         setupGUI();
     }
 
@@ -103,6 +106,8 @@ public class SuperTicTacToePanel extends JPanel {
      **********************************************************************/
     public void setupGUI() {
 
+        //game.newGame();
+        System.out.println("New game created");
         displayBoard();
 
        // quitButton = new JButton("Quit");
@@ -143,10 +148,12 @@ public class SuperTicTacToePanel extends JPanel {
                 System.exit(1);
             }
 
-            for (int row = 0; row < 3; row++) {
-                for(int col = 0; col < 3; col++) {
-                    if (board[row][col] == source) {
-                        System.out.println("You clicked at " + row + "," + col);
+            for (int Row = 0; Row < 3; Row++) {
+                for(int Col = 0; Col < 3; Col++) {
+                    if (Jboard[Row][Col] == source) {
+                        System.out.println("You clicked at " + Row + "," + Col);
+                        game.select(Row,Col);
+                        System.out.println("There is now an X at " + Row + "," + Col);
                     }
                 }
             }
@@ -176,13 +183,13 @@ public class SuperTicTacToePanel extends JPanel {
             for(int col = 0; col < 3; col++) {
                 System.out.println(row + " " + col);
 
-                board[row][col] = new JButton("");
-                board[row][col].setPreferredSize(new Dimension(100,100));
-                group.add(board[row][col]);
+                Jboard[row][col] = new JButton("");
+                Jboard[row][col].setPreferredSize(new Dimension(100,100));
+                group.add(Jboard[row][col]);
                 position.gridx = row;
                 position.gridy = col;
-                add(board[row][col], position);
-                board[row][col].addActionListener(set);
+                add(Jboard[row][col], position);
+                Jboard[row][col].addActionListener(set);
 
             }
         }
