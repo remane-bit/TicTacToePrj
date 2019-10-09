@@ -99,8 +99,7 @@ public class SuperTicTacToePanel extends JPanel {
         game.setStartsFirst(whosFirst);
         game.newGame();
         setupGUI();
-        game.randomAI();
-    }
+       }
 
 
     /***********************************************************************
@@ -158,7 +157,25 @@ public class SuperTicTacToePanel extends JPanel {
 
             if(source == AIturnButton) {
                 game.randomAI();
-                //Jboard[]
+                iBoard = game.getBoard();
+                for (int Row = 0; Row < numRowsCols; Row++) {
+                    for (int Col = 0; Col < numRowsCols; Col++) {
+                            if( iBoard[Row][Col] == Cell.O) {
+                                Jboard[Row][Col].setText("O");
+                                Jboard[Row][Col].setEnabled(false);
+                            }
+                    }
+                }
+                AIturnButton.setEnabled(false);
+
+                /** This nested loop will re-enable all the buttons that have EMPTY cells **/
+                for (int row = 0; row < numRowsCols; row++) {
+                    for (int col = 0; col < numRowsCols; col++) {
+                        if( iBoard[row][col] == Cell.EMPTY) {
+                            Jboard[row][col].setEnabled(true);
+                        }
+                    }
+                }
             }
 
 
@@ -172,14 +189,28 @@ public class SuperTicTacToePanel extends JPanel {
                         //Make the x appear on the GUI
                         Jboard[Row][Col].setText("X");
                         Jboard[Row][Col].setEnabled(false);
+                        AIturnButton.setEnabled(true);
+
+                        /** This nested loop within a nested loop will deactivate all the game buttons
+                         *  once the user selects their move. Once the user presses the AI turns button,
+                         *  the cells with open space will be re-enabled.
+                         **/
+                        for (int row = 0; row < numRowsCols; row++) {
+                            for (int col = 0; col < numRowsCols; col++) {
+                                Jboard[row][col].setEnabled(false);
+                            }
+                        }
 
                     }
                 }
             }
 
 
-
-
+            /** If there are no more moves in the game, disable the AI's turn button **/
+            if(game.getCurrentTurn() == (numRowsCols * numRowsCols)) {
+                AIturnButton.setEnabled(false);
+                //Prompt a window stating a cats game
+            }
            // if(source == board[row][col]) {            }
         }
 
