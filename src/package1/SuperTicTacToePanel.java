@@ -197,6 +197,10 @@ public class SuperTicTacToePanel extends JPanel {
 
             if(source == undoButton) {
                 game.undoPastMove();
+                game.setCurrentTurn(game.getCurrentTurn() - 1);
+                updateBoard();
+                AIturnButton.setEnabled(true);
+                reEnableEmpty();
             }
 
             if(source == AIturnButton) {
@@ -216,14 +220,14 @@ public class SuperTicTacToePanel extends JPanel {
             for (int Row = 0; Row < numRowsCols; Row++) {
                 for(int Col = 0; Col < numRowsCols; Col++) {
                     if (Jboard[Row][Col] == source) {
-                        System.out.println("You clicked at " + Row + "," + Col);
+                       // System.out.println("You clicked at " + Row + "," + Col);
                         game.select(Row,Col);
                         game.updatePastMoves(Row, Col);
 
                         checkGameState(Row, Col);
 
                         updateBoard();
-                        System.out.println("There is now an X at " + Row + "," + Col);
+                       // System.out.println("There is now an X at " + Row + "," + Col);
                         Jboard[Row][Col].setEnabled(false);
                         AIturnButton.setEnabled(true);
                     }
