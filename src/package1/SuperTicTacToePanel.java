@@ -14,7 +14,7 @@ public class SuperTicTacToePanel extends JPanel {
     private GameStatus Status;
     private JButton[][] Jboard = new JButton[15][15];
     private Cell[][] iBoard;
-    private JButton quitButton , undoButton, AIturnButton;
+    private JButton quitButton , undoButton, AIturnButton, resetButton;
     private JLabel spacing;
     private ImageIcon xIcon;
     private ImageIcon oIcon;
@@ -127,11 +127,13 @@ public class SuperTicTacToePanel extends JPanel {
         quitButton = new JButton("Quit");
         undoButton = new JButton("Undo");
         AIturnButton = new JButton("AI Turn");
+        resetButton = new JButton("Reset");
         spacing = new JLabel("           ");
 
         group.add(quitButton);
         group.add(undoButton);
         group.add(AIturnButton);
+        group.add(resetButton);
 
         quitButton.setPreferredSize(new Dimension(100,30));
         position.gridx = 0;
@@ -151,6 +153,11 @@ public class SuperTicTacToePanel extends JPanel {
         add(AIturnButton, position);
         AIturnButton.addActionListener(set);
 
+        resetButton.setPreferredSize(new Dimension(100,30));
+        position.gridx = 0;
+        position.gridy = 3;
+        add(resetButton, position);
+        resetButton.addActionListener(set);
 
         /** Board buttons. Letters rep. column position, numbers rep. row position **/
 
@@ -165,7 +172,7 @@ public class SuperTicTacToePanel extends JPanel {
                 Jboard[row][col].setPreferredSize(new Dimension(sizeOfCell,sizeOfCell));
                 group.add(Jboard[row][col]);
                 position.gridx = row;
-                position.gridy = col + 3;
+                position.gridy = col + 4;
                 add(Jboard[row][col], position);
                 Jboard[row][col].addActionListener(set);
                 Jboard[row][col].setFont(f);
@@ -199,6 +206,11 @@ public class SuperTicTacToePanel extends JPanel {
                 AIturnButton.setEnabled(false);
             }
 
+            if(source == resetButton) {
+                game.newGame();
+                reEnableEmpty();
+                AIturnButton.setEnabled(false);
+            }
 
             /** If any of the tic tac toe buttons are selected, do the following **/
             for (int Row = 0; Row < numRowsCols; Row++) {
