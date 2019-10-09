@@ -98,126 +98,17 @@ public class SuperTicTacToePanel extends JPanel {
         game.setConnectionsToWin(numToWin);
         game.setStartsFirst(whosFirst);
         game.newGame();
-        setupGUI();
+        displayBoard();
        }
 
 
     /***********************************************************************
      * This method will set up all the buttons on the GUI
      **********************************************************************/
-    public void setupGUI() {
 
-        //game.newGame();
+    private void displayBoard() {
         System.out.println("New game created");
-        displayBoard();
 
-
-
-       // quitButton = new JButton("Quit");
-      //  quitButton.addActionListener(this);
-
-    }
-
-    public void inputParameters() {
-        if (numRowsCols > 3 && numToWin < 3) {
-            failureFlag = true;
-        }
-
-        if (numRowsCols == 3 && numToWin != 3) {
-            failureFlag = true;
-        }
-
-        if (numRowsCols > 15 || numRowsCols < 2) {
-            failureFlag = true;
-        }
-
-        if (!(whosFirst.equals("X") || whosFirst.equals("x") || whosFirst.equals("O") || whosFirst.equals("o"))) {
-            failureFlag = true;
-        }
-
-        if (numToWin > numRowsCols) {
-            failureFlag = true;
-        }
-    }
-
-
-    private class ButtonListener implements ActionListener {
-
-        public void actionPerformed(ActionEvent e) {
-
-            Object source = e.getSource();
-
-            if(source == quitButton) {
-                System.exit(1);
-            }
-
-            if(source == undoButton) {
-                game.undoPastMove();
-            }
-
-            if(source == AIturnButton) {
-                game.randomAI();
-                iBoard = game.getBoard();
-                for (int Row = 0; Row < numRowsCols; Row++) {
-                    for (int Col = 0; Col < numRowsCols; Col++) {
-                            if( iBoard[Row][Col] == Cell.O) {
-                                Jboard[Row][Col].setText("O");
-                                Jboard[Row][Col].setEnabled(false);
-                            }
-                    }
-                }
-                AIturnButton.setEnabled(false);
-
-                /** This nested loop will re-enable all the buttons that have EMPTY cells **/
-                for (int row = 0; row < numRowsCols; row++) {
-                    for (int col = 0; col < numRowsCols; col++) {
-                        if( iBoard[row][col] == Cell.EMPTY) {
-                            Jboard[row][col].setEnabled(true);
-                        }
-                    }
-                }
-            }
-
-
-            /** If any of the tic tac toe buttons are selected, do the following **/
-            for (int Row = 0; Row < numRowsCols; Row++) {
-                for(int Col = 0; Col < numRowsCols; Col++) {
-                    if (Jboard[Row][Col] == source) {
-                        System.out.println("You clicked at " + Row + "," + Col);
-                        game.select(Row,Col);
-                        game.updatePastMoves(Row, Col);
-                        System.out.println("There is now an X at " + Row + "," + Col);
-                        //Make the x appear on the GUI
-                        Jboard[Row][Col].setText("X");
-                        Jboard[Row][Col].setEnabled(false);
-                        AIturnButton.setEnabled(true);
-
-                        /** This nested loop within a nested loop will deactivate all the game buttons
-                         *  once the user selects their move. Once the user presses the AI turns button,
-                         *  the cells with open space will be re-enabled.
-                         **/
-                        for (int row = 0; row < numRowsCols; row++) {
-                            for (int col = 0; col < numRowsCols; col++) {
-                                Jboard[row][col].setEnabled(false);
-                            }
-                        }
-
-                    }
-                }
-            }
-
-
-            /** If there are no more moves in the game, disable the AI's turn button **/
-            if(game.getCurrentTurn() == (numRowsCols * numRowsCols)) {
-                AIturnButton.setEnabled(false);
-                //Prompt a window stating a cats game
-            }
-           // if(source == board[row][col]) {            }
-        }
-
-    }
-
-    private  void displayBoard() {
         /** Sets the manager for how components are going to be displayed **/
         setLayout(new GridBagLayout());
 
@@ -280,9 +171,126 @@ public class SuperTicTacToePanel extends JPanel {
 
             }
         }
+    }
+
+
+    /**********************
+     * Action Listener
+     *********************/
+    private class ButtonListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+
+            Object source = e.getSource();
+
+            if(source == quitButton) {
+                System.exit(1);
+            }
+
+            if(source == undoButton) {
+                game.undoPastMove();
+            }
+
+            if(source == AIturnButton) {
+                game.randomAI();
+                updateBoard();
+                reEnableEmpty();
+                AIturnButton.setEnabled(false);
+            }
+
+
+            /** If any of the tic tac toe buttons are selected, do the following **/
+            for (int Row = 0; Row < numRowsCols; Row++) {
+                for(int Col = 0; Col < numRowsCols; Col++) {
+                    if (Jboard[Row][Col] == source) {
+                        System.out.println("You clicked at " + Row + "," + Col);
+                        game.select(Row,Col);
+                        game.updatePastMoves(Row, Col);
+                        updateBoard();
+                        System.out.println("There is now an X at " + Row + "," + Col);
+                        Jboard[Row][Col].setEnabled(false);
+                        AIturnButton.setEnabled(true);
+                    }
+                }
+            }
+
+
+            /** If there are no more moves in the game, disable the AI's turn button **/
+            if(game.getCurrentTurn() == (numRowsCols * numRowsCols)) {
+                AIturnButton.setEnabled(false);
+                //Prompt a window stating a cats game
+            }
+            // if(source == board[row][col]) {            }
+
+        }
+
+    }
+
+    /***********************************************
+     * Conditionals for the iniitial parameters.
+     */
+    public void inputParameters() {
+        if (numRowsCols > 3 && numToWin < 3) {
+            failureFlag = true;
+        }
+
+        if (numRowsCols == 3 && numToWin != 3) {
+            failureFlag = true;
+        }
+
+        if (numRowsCols > 15 || numRowsCols < 2) {
+            failureFlag = true;
+        }
+
+        if (!(whosFirst.equals("X") || whosFirst.equals("x") || whosFirst.equals("O") || whosFirst.equals("o"))) {
+            failureFlag = true;
+        }
+
+        if (numToWin > numRowsCols) {
+            failureFlag = true;
+        }
+    }
 
 
 
+
+
+
+    private void updateBoard() {
+        iBoard = game.getBoard();
+        for (int Row = 0; Row < numRowsCols; Row++) {
+            for (int Col = 0; Col < numRowsCols; Col++) {
+                if( iBoard[Row][Col] == Cell.O) {
+                    Jboard[Row][Col].setText("O");
+                    Jboard[Row][Col].setEnabled(false);
+                }
+
+                if( iBoard[Row][Col] == Cell.X) {
+                    Jboard[Row][Col].setText("X");
+                    Jboard[Row][Col].setEnabled(false);
+                }
+
+                if( iBoard[Row][Col] == Cell.EMPTY) {
+                    Jboard[Row][Col].setText("");
+                    Jboard[Row][Col].setEnabled(false);
+                }
+
+            }
+        }
+    }
+
+    private void reEnableEmpty() {
+        iBoard = game.getBoard();
+        for (int Row = 0; Row < numRowsCols; Row++) {
+            for (int Col = 0; Col < numRowsCols; Col++) {
+
+                if( iBoard[Row][Col] == Cell.EMPTY) {
+                    Jboard[Row][Col].setText("");
+                    Jboard[Row][Col].setEnabled(true);
+                }
+
+            }
+        }
     }
 
 }
