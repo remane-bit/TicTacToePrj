@@ -11,35 +11,43 @@ public class SuperTicTacToePanel extends JPanel {
     /** Game object **/
     private SuperTicTacToeGame game;
 
-    private GameStatus Status;
-    private JButton[][] Jboard = new JButton[15][15];
-    private Cell[][] iBoard;
-    private JButton quitButton , undoButton, AIturnButton, resetButton;
-    private JLabel spacing;
-    private ImageIcon xIcon;
-    private ImageIcon oIcon;
-    private ImageIcon emptyIcon;
 
+    private GameStatus Status;
+
+    /** The tic tac toe board. Max size is 15 x 15 **/
+    private JButton[][] Jboard = new JButton[15][15];
+
+    /** The cells that make up the board. Will have X,O, or EMPTY states **/
+    private Cell[][] iBoard;
+
+    /** Action Buttons for the GUI **/
+    private JButton quitButton , undoButton, AIturnButton, resetButton;
+
+    /** Data received from user input from the initial popup screen **/
     private int numRowsCols;
     private int numToWin;
     private String whosFirst;
+
+    /** User input converted to a string **/
     private String numRowsColsString;
     private String numToWinString;
+
+    /** Flag that determines if parameters are correct **/
     private boolean failureFlag;
 
 
     public SuperTicTacToePanel() {
-
+        /** Instantiation of the game **/
         game = new SuperTicTacToeGame();
 
+        /** Popup window the user will see, prompting them to fill data in **/
         JTextField rowscolsField = new JTextField(2);
         JTextField inaRowField = new JTextField(2);
         JTextField whosFirstField = new JTextField(1);
-        xIcon = new ImageIcon("x.jpg");
-        oIcon = new ImageIcon("o.jpg");
-
         JPanel myPanel = new JPanel();
 
+        /** This do-while loop will have the window popup over and over again if the user does not put the
+         * proper input in **/
         do {
             failureFlag = false;
 
@@ -95,10 +103,16 @@ public class SuperTicTacToePanel extends JPanel {
 
         } while(failureFlag);
 
+        /** This sends the data received to the game object, which sends it to the Game.java **/
         game.setNumberOfRowsCols(numRowsCols);
         game.setConnectionsToWin(numToWin);
         game.setStartsFirst(whosFirst);
+
+        /** Creates the new game **/
         game.newGame();
+        System.out.println("New game created");
+
+        /** Displays the board on the GUI **/
         displayBoard();
        }
 
@@ -108,8 +122,6 @@ public class SuperTicTacToePanel extends JPanel {
      **********************************************************************/
 
     private void displayBoard() {
-        System.out.println("New game created");
-
         /** Sets the manager for how components are going to be displayed **/
         setLayout(new GridBagLayout());
 
@@ -119,54 +131,74 @@ public class SuperTicTacToePanel extends JPanel {
         /** Makes all components fill the entire cell in a GridBagLayout **/
         position.fill = GridBagConstraints.HORIZONTAL;
 
+        /** Creates a new ButtonListener that extends actionListener **/
         ButtonListener set = new ButtonListener();
 
+        /** Instantiataion of buttons **/
         ButtonGroup group = new ButtonGroup();
 
-        /** Add comments **/
+        /** Declaration of the buttons that do not make up the board **/
         quitButton = new JButton("Quit");
         undoButton = new JButton("Undo");
         AIturnButton = new JButton("AI Turn");
         resetButton = new JButton("Reset");
-        spacing = new JLabel("           ");
 
+        /** Declaration of the buttons **/
         group.add(quitButton);
         group.add(undoButton);
         group.add(AIturnButton);
         group.add(resetButton);
 
+        /** Quit Button **/
         quitButton.setPreferredSize(new Dimension(100,30));
         position.gridx = 0;
         position.gridy = 0;
         add(quitButton, position);
         quitButton.addActionListener(set);
 
+        /** Undo Button **/
         undoButton.setPreferredSize(new Dimension(100,30));
         position.gridx = 0;
         position.gridy = 1;
         add(undoButton, position);
         undoButton.addActionListener(set);
 
+        /** AI's Turn Button **/
         AIturnButton.setPreferredSize(new Dimension(100,30));
         position.gridx = 0;
         position.gridy = 2;
         add(AIturnButton, position);
         AIturnButton.addActionListener(set);
 
+        /** Reset Button **/
         resetButton.setPreferredSize(new Dimension(100,30));
         position.gridx = 0;
         position.gridy = 3;
         add(resetButton, position);
         resetButton.addActionListener(set);
 
-        /** Board buttons. Letters rep. column position, numbers rep. row position **/
+        int size = 72; // Make if statements to adjust as size increases
+        int sizeOfCell = 100;
 
+        /** Creation, Instantiation, and Declaration of all the buttons that make the tic tac toe board **/
         for(int row = 0; row < numRowsCols; row++) {
             for(int col = 0; col < numRowsCols; col++) {
-                //System.out.println(row + " " + col);
 
-                int size = 72; // Make if statements to adjust as size increases
-                int sizeOfCell = 100;
+                if(numRowsCols < 6) {
+                    size = 72;
+                    sizeOfCell = 100;
+                }
+
+                else if(numRowsCols >= 6 && numRowsCols < 11) {
+                    size = 48;
+                    sizeOfCell = 66;
+                }
+
+                else if(numRowsCols >= 11 && numRowsCols < 16) {
+                    size = 24;
+                    sizeOfCell = 33;
+                }
+
                 Font f = new Font("Dialog", Font.PLAIN, size);
                 Jboard[row][col] = new JButton("");
                 Jboard[row][col].setPreferredSize(new Dimension(sizeOfCell,sizeOfCell));
@@ -339,16 +371,24 @@ public class SuperTicTacToePanel extends JPanel {
         }
     }
 
+
     private void checkGameState(int row, int col) {
-       if(game.checkForX(row, col) == GameStatus.X_WON) {
-           JOptionPane.showMessageDialog(null, "X won the game!");
-           AIturnButton.setEnabled(false);
-       }
-       if(game.checkForO(row, col) == GameStatus.O_WON) {
-           JOptionPane.showMessageDialog(null, "The AI won the game!");
-           setBoardLocked();
-       }
-       if(game.checkForCats(row,col) == GameStatus.CATS) JOptionPane.showMessageDialog(null, "Tie game!");
+        if(game.checkForX(row, col) == GameStatus.X_WON) {
+            JOptionPane.showMessageDialog(null, "X won the game!");
+            AIturnButton.setEnabled(false);
+            return;
+        }
+
+        if(game.checkForO(row, col) == GameStatus.O_WON) {
+            JOptionPane.showMessageDialog(null, "The AI won the game!");
+            setBoardLocked();
+            return;
+        }
+
+        if(game.checkForCats(row,col) == GameStatus.CATS) {
+            JOptionPane.showMessageDialog(null, "Tie game!");
+            return;
+        }
     }
 
 
