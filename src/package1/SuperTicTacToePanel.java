@@ -314,9 +314,9 @@ public class SuperTicTacToePanel extends JPanel {
     }
 
     private void checkGameState(int row, int col) {
-       if(game.checkForX(row, col) == GameStatus.X_WON) System.out.println("Sicko mode");
-       if(game.checkForO(row, col) == GameStatus.O_WON) System.out.println("You lose");
-       if(game.checkForCats(row,col) == GameStatus.CATS) System.out.println("Tie Game");
+       if(game.checkForX(row, col) == GameStatus.X_WON) System.out.println("X won the game!");
+       if(game.checkForO(row, col) == GameStatus.O_WON) System.out.println("The AI won the game!");
+       if(game.checkForCats(row,col) == GameStatus.CATS) System.out.println("Tie game!");
     }
 
 
